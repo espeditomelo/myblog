@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<body>
+<div layout:fragment="content">
+
+        <section>
+            <div class="container" style="width: 60%; padding-bottom: 30 px;">
+
+                <span th:if="${selectedCategory != null}">
+                    <nav aria-label="breadcrumb">
+                       <ol class="breadcrumb" style="backgound-color: white; padding-left: 0px">
+                           <li class="breadcumb-item active" aria-current="page">
+                               <h2 th:text="${selectedCategory.name}"></h2>
+                           </li>
+                       </ol>
+                    </nav>
+                </span>
+
+                <article>
+
+                    <div th:if="${post.mainImageUrl != null}" style="margin-bottom: 30px; text-align: center;">
+                        <img th:src="${post.mainImageUrl}" alt="Post image" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                    </div>
+
+                    <h2 class="card-title" style="font-weight: bold; color=blue; padding-top: 5px;">
+                        <span th:text="${post.title}"></span>
+                    </h2>
+
+                    <p class="card-subtitle mb-2 text-muted" style="font-size: 0.8rem;">
+                        <span th:text="${#temporals.format(post.createdAt, 'dd/MM/yyyy')}"></span> - by
+                        <span th:text="${post.user.username}"></span>
+                    </p>
+
+                    <section>
+                        <p class="card-text" style="margin-top: 40px;"><span th:utext="${post.body}"></span></p>
+                    </section>
+
+
+                    <!--comment-->
+                    <div class="card shadow-sm bg-white rounded" style="margin-top: 20px;">
+                        <div class="card-body">
+                            <h2 class="card-title" style="font-weight: normal; color=blue; padding-top: 5px;">
+                                Leave Your Comment
+                            </h2>
+                            <form th:action="@{'/posts/' + ${post.id} + '/comments'}" method="post" th:object="${comment}">
+
+                                <div class="form-group">
+                                    <label for="commentComment">Comment</label>
+                                    <textarea class="form-control" id="commentComment" th:field="*{content}" placeholder="Your comment *" required></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="usernameComment">Username</label>
+                                    <input type="text" class="form-control" id="usernameComment" th:field="*{username}" placeholder="Your username *" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="emailComment">E-mail</label>
+                                    <input type="email" class="form-control" id="emailComment" th:field="*{email}" placeholder="Your e-mail *" required>
+                                </div>
+
+                                <small class="form-text text-muted">(*) Required</small>
+                                <button type="submit" class="btn btn-primary" role="button" style="margin-top: 10px;">Post Your Comment</button>
+                            </form>
+                        </div>
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+
+</div>
+</body>
+</html>

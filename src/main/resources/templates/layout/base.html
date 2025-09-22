@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head th:replace="~{fragments/head :: common-head}">
+    <!-- The Head will be replaced by the frangment -->
+</head>
+
+<body>
+<header th:replace="~{fragments/header :: common-header}">
+    <!-- The Header will be replaced by the frangment -->
+</header>
+
+<main class="container-fluid py-4">
+    <div layout:fragment="content">
+        <!-- The page content will be inserted here -->
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: common-footer}">
+    <!-- The Footer will be replaced by the frangment -->
+</footer>
+
+<!-- Block for specific scripts of each page -->
+<div layout:fragment="scripts"></div>
+
+<!-- "Go back to the top" button -->
+<a title="Scroll back to top" aria-label="Scroll back to top" rel="nofollow" href="#" id="back-to-top" class="back-to-top" data-scroll-speed="400" data-start-scroll="300" role="button">
+        <span class="gp-icon icon-arrow-up">
+            <svg viewBox="0 0 330 512" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414">
+                <path d="M305.863 314.916c0 2.266-1.133 4.815-2.832 6.514l-14.157 14.163c-1.699 1.7-3.964 2.832-6.513 2.832-2.265 0-4.813-1.133-6.512-2.832L164.572 224.276 53.295 335.593c-1.699 1.7-4.247 2.832-6.512 2.832-2.265 0-4.814-1.133-6.513-2.832L26.113 321.43c-1.699-1.7-2.831-4.248-2.831-6.514s1.132-4.816 2.831-6.515L158.06 176.408c1.699-1.7 4.247-2.833 6.512-2.833 2.265 0 4.814 1.133 6.513 2.833L303.03 308.4c1.7 1.7 2.832 4.249 2.832 6.515z" fill-rule="nonzero"></path>
+            </svg>
+        </span>
+</a>
+
+<style>
+    /* CSS para o botão "Voltar ao topo" */
+    .back-to-top {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        background-color: #007bff;
+        color: white;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 50px;
+        font-size: 20px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        text-decoration: none;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .back-to-top.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .back-to-top:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+        color: white;
+        text-decoration: none;
+    }
+
+    .back-to-top svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const backToTopButton = document.getElementById('back-to-top');
+        const startScrollValue = parseInt(backToTopButton.getAttribute('data-start-scroll')) || 300;
+        const scrollSpeed = parseInt(backToTopButton.getAttribute('data-scroll-speed')) || 400;
+
+        // Mostrar/ocultar botão baseado na posição do scroll
+        function toggleBackToTopButton() {
+            if (window.pageYOffset > startScrollValue) {
+                backToTopButton.classList.add('show');
+            } else {
+                backToTopButton.classList.remove('show');
+            }
+        }
+
+        // Scroll suave para o topo
+        function scrollToTop() {
+            const scrollStep = -window.scrollY / (scrollSpeed / 15);
+            const scrollInterval = setInterval(function(){
+                if (window.scrollY !== 0) {
+                    window.scrollBy(0, scrollStep);
+                } else {
+                    clearInterval(scrollInterval);
+                }
+            }, 15);
+        }
+
+        // Event listeners
+        window.addEventListener('scroll', toggleBackToTopButton);
+
+        backToTopButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            scrollToTop();
+        });
+
+        // Verificar posição inicial
+        toggleBackToTopButton();
+    });
+</script>
+<!-- "Go back to the top" button -->
+
+</body>
+</html>
