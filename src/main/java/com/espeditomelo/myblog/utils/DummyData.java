@@ -25,7 +25,7 @@ public class DummyData {
     @Autowired
     UserServiceImpl userService;
 
-    @PostConstruct
+    //@PostConstruct
     public void savePosts(){
 
 

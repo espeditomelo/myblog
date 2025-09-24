@@ -35,8 +35,8 @@
                     <a th:href="${(#mvc.url('PC#getPostDetailed').arg(0, post.id)).build()}">
                         <div th:if="${post.mainImageUrl != null}" style="margin-bottom: 15px;">
                             <img th:src="${post.mainImageUrl}"
-                            alt="Post Image"
-                            style="max-width: 100%; height: auto; border-radius: 5px;">
+                                 alt="Post Image"
+                                 style="max-width: 100%; height: auto; border-radius: 5px;">
                         </div>
                     </a>
 
