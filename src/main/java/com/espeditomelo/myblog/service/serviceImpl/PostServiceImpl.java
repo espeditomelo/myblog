@@ -60,6 +60,10 @@ public class PostServiceImpl implements PostService {
         return postRepository.findBySlugWithCategoryAndUser(slug).orElse(null);
     }
 
+    @Override
+    public Page<Post> findAllWithCategoryAndUserByUserPageable(Long id, Pageable pageable) {
+        return postRepository.findAllWithCategoryAndUserByUserPageable(id, pageable);
+    }
 
 
     @Override

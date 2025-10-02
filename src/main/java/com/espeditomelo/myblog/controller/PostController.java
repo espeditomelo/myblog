@@ -63,7 +63,6 @@ public class PostController {
         return modelAndView;
     }
 
-
     @RequestMapping(value = "/posts/{id}", method = RequestMethod.GET)
     public ModelAndView getPostDetailed(@PathVariable("id") long id) {
         ModelAndView modelAndView = new ModelAndView("postDetailed");
@@ -85,12 +84,33 @@ public class PostController {
         }
         modelAndView.addObject("post", post);
 
-        //adicionado
         modelAndView.addObject("comment", new Comment());
 
         return modelAndView;
     }
 
+    //new
+    @RequestMapping(value = "/postsbyuser/{id}", method = RequestMethod.GET)
+    public ModelAndView getPostsByUser(@PathVariable("id") long id,
+                                       @RequestParam(value = "page", defaultValue = "0") int page){
+            ModelAndView modelAndView = new ModelAndView("posts-list");
+
+            Pageable pageable = PageRequest.of(page,PAGE_SIZE);
+            Page<Post> postsPage = postService.findAllWithCategoryAndUserByUserPageable(id, pageable);
+
+            User selectedUser = userService.findById(id);
+
+            modelAndView.addObject("posts", postsPage.getContent());
+            modelAndView.addObject("currentPage", page);
+            modelAndView.addObject("totalPages", postsPage.getTotalPages());
+            modelAndView.addObject("totalItems", postsPage.getTotalElements());
+            modelAndView.addObject("hasNext", postsPage.hasNext());
+            modelAndView.addObject("hasPrev", postsPage.hasPrevious());
+            modelAndView.addObject("userId", id);
+            modelAndView.addObject("selectedUser", selectedUser);
+
+            return modelAndView;
+    }
 
     @RequestMapping(value = "/postsbycategory/{id}", method = RequestMethod.GET)
     public ModelAndView getPostsByCategory(@PathVariable("id") long id,

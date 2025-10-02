@@ -58,4 +58,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("SELECT p.slug FROM Post p WHERE p.slug LIKE :slugPattern")
     List<String> findSimilarSlugs(@Param("slugPattern") String slugPattern);
+
+    @Query("SELECT DISTINCT p FROM Post p " +
+            "LEFT JOIN FETCH p.user " +
+            "LEFT JOIN FETCH p.postCategories pc " +
+            "LEFT JOIN FETCH pc.category " +
+            "WHERE p.status = 'A' " +
+            "AND p.user.id = :id " +
+            "ORDER BY p.createdAt DESC")
+    Page<Post> findAllWithCategoryAndUserByUserPageable(@Param("id") Long id, Pageable pageable);
 }

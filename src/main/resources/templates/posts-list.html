@@ -18,6 +18,16 @@
                 </nav>
             </span>
 
+            <span th:if="${selectedUser != null}">
+                <nav aria-label="breadcrumb">
+                   <ol class="breadcrumb" style="backgound-color: white; padding-left: 0px">
+                       <li class="breadcumb-item active" aria-current="page">
+                           <h2 th:text="${selectedUser.username}"></h2>
+                       </li>
+                   </ol>
+                </nav>
+            </span>
+
             <div class="card shadow-sm bg-white rounded" style="margin-top: 20px;" th:each="post : ${posts}">
                 <div class="card-body">
 
@@ -29,7 +39,11 @@
 
                     <p class="card-subtitle mb-2 text-muted" style="font-size: 0.8rem;">
                         <span th:text="${#temporals.format(post.createdAt, 'dd/MM/yyyy')}"></span> - by
-                        <span th:text="${post.user.username}"></span>
+
+                        <a th:href="@{/postsbyuser/{id}(id=${post.user.id})}">
+                            <span th:text="${post.user.username}"></span>
+                        </a>
+
                     </p>
 
                     <a th:href="${(#mvc.url('PC#getPostDetailed').arg(0, post.id)).build()}">

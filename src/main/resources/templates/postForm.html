@@ -24,14 +24,14 @@
 
                     <div class="form-group">
                         <label for="mainImage">Main Image</label>
-                        <input type="file" class="form-control-file" id="mainImage" name="mainImage" accept="image/*">
+                        <input type="file" class="form-control-file" id="mainImage" name="mainImage" accept="image/*" required>
                         <small class="form-text text-muted">Select a main image for the post (optional)</small>
 
                         <label>Categories</label>
                         <div class="checkbox-group" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; max-height: 200px; overflow-y: auto;">
                             <div th:each="category : ${categories}" class="form-check">
                                 <input type="checkbox"
-                                       class="form-check-input"
+                                       class="category-checkbox"
                                        th:id="'category_' + ${category.id}"
                                        th:name="categoryIds"
                                        th:value="${category.id}"
@@ -40,6 +40,14 @@
                             </div>
                         </div>
                         <small class="form-text text-muted">Select one or more categories</small>
+
+<!--                        <small id="categoryError" class="form-text text-danger" style="display:none;">-->
+<!--                            Please select at least one category.-->
+<!--                        </small>-->
+
+
+                        <div id="categoryError" style="color:red; display:none;">Please select at least one category.</div>
+
                     </div>
 
                     <div class="form-group">
@@ -77,7 +85,7 @@
                     </div>
 
                     <label for="summernote">Body</label>
-                    <textarea id="summernote" th:field="*{body}" placeholder="Text *"></textarea>
+                    <textarea id="summernote" th:field="*{body}" placeholder="Text *" required></textarea>
 
                     <div th:if="${#fields.hasErrors('body')}" class="invalid-feedback" th:errors="*{body}"></div>
                     <small class="form-text text-muted">(*) Required</small>
@@ -95,12 +103,35 @@
 <div layout:fragment="scripts">
     <script th:inline="javascript">
         $(document).ready(function () {
+
             $('#summernote').summernote({
                 height: 300
+            });
+
+            $("form").on("submit", function (e) {
+                let valid = true;
+
+                let selected = $(".category-checkbox:checked").length;
+                if (selected === 0) {
+                    $("#categoryError").show();
+                    valid = false;
+                } else {
+                    $("#categoryError").hide();
+                }
+
+                if ($('#summernote').summernote('isEmpty')) {
+                    alert("The 'Body' is required!");
+                    valid = false;
+                }
+
+                if (!valid) {
+                    e.preventDefault();
+                }
             });
         });
     </script>
 </div>
+
 
 </body>
 </html>

@@ -31,7 +31,10 @@
 
                     <p class="card-subtitle mb-2 text-muted" style="font-size: 0.8rem;">
                         <span th:text="${#temporals.format(post.createdAt, 'dd/MM/yyyy')}"></span> - by
-                        <span th:text="${post.user.username}"></span>
+<!--                        <span th:text="${post.user.username}"></span>-->
+                        <a th:href="@{/postsbyuser/{id}(id=${post.user.id})}">
+                            <span th:text="${post.user.username}"></span>
+                        </a>
                     </p>
 
                     <section>
