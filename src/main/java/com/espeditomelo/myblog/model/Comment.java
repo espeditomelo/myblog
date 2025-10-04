@@ -33,7 +33,7 @@ public class Comment {
     @Column(updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @NotNull
+   // @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false)
     private Post post;
@@ -49,9 +49,7 @@ public class Comment {
 
     public Comment() {}
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
 
     public void setId(Long id) {
         this.id = id;
@@ -69,7 +67,7 @@ public class Comment {
         return username;
     }
 
-    public void setUsername(@NotBlank String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
