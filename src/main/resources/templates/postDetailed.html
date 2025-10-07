@@ -65,26 +65,7 @@
 
                             <div class="mt-4">
 
-                                <div th:each="comment : ${comments}">
-                                    <div class="border rounded p-3 mb-3">
-                                        <p>
-                                            <strong th:text="${comment.username}">Username</strong>
-                                            <small class="text-muted" th:text="${#temporals.format(comment.createdAt, 'dd/MM/yyyy')}"></small>
-                                        </p>
-                                        <p th:text="${comment.content}"></p>
-
-                                        <div th:if="${comment.replies != null}">
-                                            <div th:each="reply : ${comment.replies}" class="ms-4 border-start ps-3 mt-2">
-                                                <p>
-                                                    <strong th:text="${reply.username}"></strong>
-                                                    <small class="text-muted" th:text="${#temporals.format(reply.createdAt, 'dd/MM/yyyy')}"></small>
-                                                </p>
-                                                <p th:text="reply.content"></p>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
+                                <div th:replace="~{fragments/comment-thread :: commentThread(${comments})}"></div>
 
                             </div>
 

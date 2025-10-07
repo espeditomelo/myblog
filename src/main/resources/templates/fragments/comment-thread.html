@@ -1,0 +1,23 @@
+<!-- fragments/comment-thread.html -->
+<div th:fragment="commentThread(commentList)">
+    <div th:each="comment : ${commentList}" class="comment-block mb-3">
+
+        <!-- Comentário -->
+        <div class="border rounded p-3 bg-light bg-white">
+            <p class="mb-1">
+                <strong th:text="${comment.username}">Username</strong> -
+                <small class="text-muted ms-2" th:text="${#temporals.format(comment.createdAt, 'dd/MM/yyyy')}"></small>
+            </p>
+            <br>
+            <p th:text="${comment.content}" class="mb-0"></p>
+            <br>
+            <p>reply</p>
+        </div>
+
+        <!-- Respostas (recuadas mais à direita) -->
+        <div th:if="${!#lists.isEmpty(comment.replies)}"
+             style="margin-left: 40px; padding-left: 15px; border-left: 2px solid rgba(0,0,0,0.1); margin-top: 15px;">
+            <div th:replace="~{fragments/comment-thread :: commentThread(${comment.replies})}"></div>
+        </div>
+    </div>
+</div>
