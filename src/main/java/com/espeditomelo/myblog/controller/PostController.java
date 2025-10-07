@@ -5,6 +5,7 @@ import com.espeditomelo.myblog.model.Comment;
 import com.espeditomelo.myblog.model.Post;
 import com.espeditomelo.myblog.model.User;
 import com.espeditomelo.myblog.service.CategoryService;
+import com.espeditomelo.myblog.service.CommentService;
 import com.espeditomelo.myblog.service.PostService;
 import com.espeditomelo.myblog.service.UserService;
 import com.espeditomelo.myblog.service.serviceImpl.ImageStorageService;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +39,9 @@ public class PostController {
 
     @Autowired
     ImageStorageService imageStorageService;
+
+    @Autowired
+    CommentService commentService;
 
     private static final int PAGE_SIZE = 5;
 
@@ -63,16 +68,26 @@ public class PostController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/posts/{id}", method = RequestMethod.GET)
-    public ModelAndView getPostDetailed(@PathVariable("id") long id) {
-        ModelAndView modelAndView = new ModelAndView("postDetailed");
+//    @RequestMapping(value = "/posts/{id}", method = RequestMethod.GET)
+//    public ModelAndView getPostDetailed(@PathVariable("id") long id) {
+//        ModelAndView modelAndView = new ModelAndView("postDetailed");
+//        Post post = postService.findById(id);
+//        modelAndView.addObject("post", post);
+//
+//        // comment added
+//        modelAndView.addObject("comment", new Comment());
+//
+//        return modelAndView;
+//    }
+
+    @GetMapping(value = "/posts/{id}")
+    public String getPostDetailed(@PathVariable Long id, Model model){
         Post post = postService.findById(id);
-        modelAndView.addObject("post", post);
-
-        // comment added
-        modelAndView.addObject("comment", new Comment());
-
-        return modelAndView;
+        model.addAttribute("post", post);
+        List<Comment> comments = commentService.getCommentsByPost(id);
+        model.addAttribute("comments", comments);
+        model.addAttribute("comment", new Comment());
+        return "postDetailed";
     }
 
     @RequestMapping(value = "/title/{slug:[a-z0-9\\-]+}", method = RequestMethod.GET)
@@ -84,12 +99,13 @@ public class PostController {
         }
         modelAndView.addObject("post", post);
 
-        modelAndView.addObject("comment", new Comment());
+        List<Comment> comments = commentService.getCommentsByPost(post.getId());
+        modelAndView.addObject("comments", comments);
 
+        modelAndView.addObject("comment", new Comment());
         return modelAndView;
     }
 
-    //new
     @RequestMapping(value = "/postsbyuser/{id}", method = RequestMethod.GET)
     public ModelAndView getPostsByUser(@PathVariable("id") long id,
                                        @RequestParam(value = "page", defaultValue = "0") int page){
@@ -129,8 +145,6 @@ public class PostController {
         modelAndView.addObject("hasNext", postsPage.hasNext());
         modelAndView.addObject("hasPrev", postsPage.hasPrevious());
         modelAndView.addObject("categoryId", id);
-
-        //adicionado
         modelAndView.addObject("selectedCategory", selectedCategory);
 
         return modelAndView;

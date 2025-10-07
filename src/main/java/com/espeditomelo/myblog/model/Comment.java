@@ -33,7 +33,6 @@ public class Comment {
     @Column(updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-   // @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false)
     private Post post;

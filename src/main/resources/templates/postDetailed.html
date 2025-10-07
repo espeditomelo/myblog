@@ -45,7 +45,6 @@
 
                     <p class="card-subtitle mb-2 text-muted" style="font-size: 0.8rem;">
                         <span th:text="${#temporals.format(post.createdAt, 'dd/MM/yyyy')}"></span> - by
-<!--                        <span th:text="${post.user.username}"></span>-->
                         <a th:href="@{/postsbyuser/{id}(id=${post.user.id})}">
                             <span th:text="${post.user.username}"></span>
                         </a>
@@ -55,7 +54,46 @@
                         <p class="card-text" style="margin-top: 40px;"><span th:utext="${post.body}"></span></p>
                     </section>
 
-                    <!--comment-->
+
+                    <!--comments-->
+                    <div class="card shadow-sm bg-white rounded" style="margin-top: 20px;" th:if="${not #lists.isEmpty(comments)}">
+                        <div class="card-body">
+
+                            <h2 class="card-title" style="font-weight: normal; color=blue; padding-top: 5px;">
+                                Comments
+                            </h2>
+
+                            <div class="mt-4">
+
+                                <div th:each="comment : ${comments}">
+                                    <div class="border rounded p-3 mb-3">
+                                        <p>
+                                            <strong th:text="${comment.username}">Username</strong>
+                                            <small class="text-muted" th:text="${#temporals.format(comment.createdAt, 'dd/MM/yyyy')}"></small>
+                                        </p>
+                                        <p th:text="${comment.content}"></p>
+
+                                        <div th:if="${comment.replies != null}">
+                                            <div th:each="reply : ${comment.replies}" class="ms-4 border-start ps-3 mt-2">
+                                                <p>
+                                                    <strong th:text="${reply.username}"></strong>
+                                                    <small class="text-muted" th:text="${#temporals.format(reply.createdAt, 'dd/MM/yyyy')}"></small>
+                                                </p>
+                                                <p th:text="reply.content"></p>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                    <!--leave a comment-->
                     <div class="card shadow-sm bg-white rounded" style="margin-top: 20px;">
                         <div class="card-body">
 
