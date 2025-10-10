@@ -28,6 +28,7 @@ public class CommentController {
 
     @PostMapping("/posts/{postId}/comments")
     public String saveComment(@PathVariable("postId") Long postId,
+                              @RequestParam(required = false) Long parentId,
                               @Valid @ModelAttribute("comment") Comment comment,
                               BindingResult bindingResult,
                               RedirectAttributes redirectAttributes,
@@ -36,7 +37,8 @@ public class CommentController {
         Post post = postService.findById(postId);
 
         if(post == null) {
-            redirectAttributes.addFlashAttribute("error", "Post not found");
+            redirectAttributes.addFlashAttribute("error",
+                    "Post not found");
             return "redirect:/posts";
         }
 
@@ -55,6 +57,12 @@ public class CommentController {
         }
 
         comment.setPost(post);
+
+        if(parentId != null) {
+            Comment parentComment = commentService.getCommentById(parentId);
+            comment.setParent(parentComment);
+        }
+
         commentService.save(comment);
 
         redirectAttributes.addFlashAttribute("success", "Comment added successfully");

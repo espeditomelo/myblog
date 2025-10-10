@@ -29,4 +29,9 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findByPostIdAndParentIsNullOrderByCreatedAtAsc(postId);
     }
 
+    @Override
+    public Comment getCommentById(Long parentId) {
+        return commentRepository.getCommentById(parentId);
+    }
+
 }
