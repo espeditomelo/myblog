@@ -26,7 +26,14 @@
                 style="display: none;">
                 <form th:action="@{'/posts/' + ${comment.post.id} + '/comments'}"
                     method="post" th:object="${comment}">
+
                     <input type="hidden" name="parentId" th:value="${comment.id}">
+
+                    <br>
+
+                    <h3 class="card-title" style="font-weight: normal; color=blue; padding-top: 5px;">
+                        Comment Reply to <span th:text="${comment.username}"></span>
+                    </h3>
 
                     <div class="form-group">
                         <textarea class="form-control" name="content" placeholder="Your reply *" required></textarea>
