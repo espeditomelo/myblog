@@ -54,8 +54,54 @@
                         <p class="card-text" style="margin-top: 40px;"><span th:utext="${post.body}"></span></p>
                     </section>
 
+                    <br>
 
-                    <!--comments-->
+                    <!-- Share -->
+                    <div class="card shadow-sm bg-white rounded">
+                        <div class="card-body">
+                           <h6 class="card-title">Share it</h6>
+
+                            <a th:href=" 'https://www.linkedin.com/shareArticle?url=https://espeditomelo.com' +
+                                        @{/title/{slug}(slug=${post.slug})} "
+                               class="btn btn-outline-primary btn-sm"
+                               target="_blank" rel="noopener noreferrer"
+                               title="Share on LinkedIn">
+                                <i class="bi bi-linkedin" style="font-size: 1.2rem;"></i>
+                            </a>
+
+                            <!-- X (Twitter) -->
+                            <a th:href=" 'https://twitter.com/intent/tweet?url=https://espeditomelo.com' +
+                                @{/title/{slug}(slug=${post.slug})} "
+                               class="btn btn-outline-dark btn-sm me-2"
+                               target="_blank" rel="noopener noreferrer"
+                               title="Share on X (Twitter)">
+                                <i class="bi bi-twitter-x" style="font-size: 1.2rem;"></i>
+                            </a>
+
+                            <!-- WhatsApp -->
+                            <a th:href=" 'https://api.whatsapp.com/send?text=https://espeditomelo.com' +
+                                @{/title/{slug}(slug=${post.slug})} "
+                               class="btn btn-outline-success btn-sm"
+                               target="_blank" rel="noopener noreferrer"
+                               title="Share on WhatsApp">
+                                <i class="bi bi-whatsapp" style="font-size: 1.2rem;"></i>
+                            </a>
+
+                            <!-- Facebook -->
+                            <a th:href=" 'https://www.facebook.com/sharer/sharer.php?u=https://espeditomelo.com' +
+                                @{/title/{slug}(slug=${post.slug})} "
+                               class="btn btn-outline-primary btn-sm"
+                               target="_blank" rel="noopener noreferrer"
+                               title="Share on Facebook">
+                                <i class="bi bi-facebook" style="font-size: 1.2rem;"></i>
+                            </a>
+
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <!-- comments -->
                     <div class="card shadow-sm bg-white rounded" style="margin-top: 20px;" th:if="${not #lists.isEmpty(comments)}">
                         <div class="card-body">
 
@@ -71,8 +117,6 @@
 
                         </div>
                     </div>
-
-
 
                     <!--leave a comment-->
                     <div id="global-comment-card" class="card shadow-sm bg-white rounded" style="margin-top: 20px;">
@@ -146,6 +190,9 @@
                 $('#global-comment-card').slideDown();
             });
         });
+
+}
+
     </script>
 </th:block>
 
