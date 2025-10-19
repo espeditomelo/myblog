@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<body>
+<div layout:fragment="content">
+    <section>
+        <div class="container" style="width: 60%; padding-bottom: 30px;">
+
+            <div class="card shadow-sm bg-white rounded" style="margin-top: 20px;">
+                <div class="card-body">
+
+                    <!-- Header com foto (opcional) -->
+                    <div class="text-center" style="margin-bottom: 30px;">
+                        <img src="/images/profile.jpg"
+                             alt="Espedito Melo"
+                             style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                        <h1 style="margin-top: 20px; font-weight: bold; color: #007bff;">
+                            Espedito Melo
+                        </h1>
+                        <p class="text-muted">Developer | Writer | Technology Enthusiast</p>
+                    </div>
+
+                    <!-- Biografia -->
+                    <div style="margin-top: 30px; line-height: 1.8;">
+                        <h3 style="font-weight: bold; color: #333;">About Me</h3>
+                        <p>
+                            Welcome to my personal blog! I'm passionate about technology,
+                            software development, and sharing knowledge with the community.
+                        </p>
+
+                        <h3 style="margin-top: 30px; font-weight: bold; color: #333;">My Journey</h3>
+                        <p>
+                            [Conte sua história profissional e acadêmica]
+                        </p>
+
+                        <h3 style="margin-top: 30px; font-weight: bold; color: #333;">Skills & Interests</h3>
+                        <div style="margin-top: 15px;">
+                            <span class="badge badge-primary" style="margin: 5px;">Java</span>
+                            <span class="badge badge-primary" style="margin: 5px;">Spring Boot</span>
+                            <span class="badge badge-primary" style="margin: 5px;">Web Development</span>
+                            <!-- Adicione mais badges conforme necessário -->
+                        </div>
+
+                        <h3 style="margin-top: 30px; font-weight: bold; color: #333;">Connect With Me</h3>
+                        <div style="margin-top: 15px;">
+                            <a href="https://www.linkedin.com/in/espeditomelo"
+                               class="btn btn-outline-primary btn-sm"
+                               style="margin: 5px;"
+                               target="_blank"
+                               rel="noopener noreferrer">
+                                <i class="bi bi-linkedin"></i> LinkedIn
+                            </a>
+                            <a href="https://github.com/espeditomelo"
+                               class="btn btn-outline-dark btn-sm"
+                               style="margin: 5px;"
+                               target="_blank"
+                               rel="noopener noreferrer">
+                                <i class="bi bi-github"></i> GitHub
+                            </a>
+                            <a href="https://x.com/espeditomelo"
+                               class="btn btn-outline-info btn-sm"
+                               style="margin: 5px;"
+                               target="_blank"
+                               rel="noopener noreferrer">
+                                <i class="bi bi-twitter-x"></i> Twitter
+                            </a>
+                            <a href="mailto:contato@espeditomelo.com?subject=Contato%20via%20Blog"
+                               class="btn btn-outline-secondary btn-sm"
+                               style="margin: 5px;"
+                               title="Send me an email">
+                                <i class="bi bi-envelope"></i> E-mail
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+</div>
+</body>
+</html>
