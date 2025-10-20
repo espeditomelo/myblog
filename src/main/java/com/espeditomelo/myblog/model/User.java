@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "USERS")
+@Table(name = "BLOG_USERS")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
