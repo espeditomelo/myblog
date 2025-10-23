@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<body>
+
+<div layout:fragment="content">
+    <section>
+        <div class="container" style="width: 60%; padding-bottom: 30 px;">
+
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="backgound-color: white; padding-left: 0px">
+                    <li class="breadcrumb-item" aria-current="page"><a href="/admin">Admin</a></li>
+                    <li class="breadcrumb-item" aria-current="page"><a href="/users">Categories</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">New Category</li>
+                </ol>
+            </nav>
+
+            <div>
+
+                <th:block th:insert="~{validationMessage}"></th:block>
+
+                <form method="post" th:object="${category}">
+
+                    <input type="hidden" th:field="*{id}">
+
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="Name *" required>
+                        <div th:if="${#fields.hasErrors('name')}" class="invalid-feedback" th:errors="*{name}"></div>
+                    </div>
+
+                    <small class="form-text text-muted">(*) Required</small>
+                    <button type="submit" class="btn btn-primary" role="button" style="margin-top: 10px;">Submit</button>
+                    <a href="/categories" class="btn btn-light" role="button" style="margin-top: 10px;">Cancel</a>
+                </form>
+            </div>
+
+        </div>
+    </section>
+</div>
+</body>
+</html>

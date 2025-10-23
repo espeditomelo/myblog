@@ -25,15 +25,15 @@ public class DummyData {
     @Autowired
     UserServiceImpl userService;
 
-//    @PostConstruct
+ //  @PostConstruct
     public void savePosts(){
 
 
         User user2 =  new User();
-        user2.setUsername("1");
+        user2.setUsername("Espedito Melo");
         user2.setAdmin(true);
         user2.setPassword("1");
-        user2.setEmail("1@1.com");
+        user2.setEmail("espeditomelo@espeditomelo.com");
         userService.save(user2);
 
         Category category1 = new Category();
