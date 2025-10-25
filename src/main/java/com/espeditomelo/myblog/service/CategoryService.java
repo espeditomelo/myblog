@@ -11,4 +11,5 @@ public interface CategoryService {
     Category save(Category category);
     List<Category> findAllByNameAsc();
     Optional<Category> findByName(String name);
+    void deleteById(Long id);
 }

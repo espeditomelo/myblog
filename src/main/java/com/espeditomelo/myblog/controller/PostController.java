@@ -68,18 +68,6 @@ public class PostController {
         return modelAndView;
     }
 
-//    @RequestMapping(value = "/posts/{id}", method = RequestMethod.GET)
-//    public ModelAndView getPostDetailed(@PathVariable("id") long id) {
-//        ModelAndView modelAndView = new ModelAndView("postDetailed");
-//        Post post = postService.findById(id);
-//        modelAndView.addObject("post", post);
-//
-//        // comment added
-//        modelAndView.addObject("comment", new Comment());
-//
-//        return modelAndView;
-//    }
-
     @GetMapping(value = "/posts/{id}")
     public String getPostDetailed(@PathVariable Long id, Model model){
         Post post = postService.findById(id);

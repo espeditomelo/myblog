@@ -13,4 +13,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     List<Category> findAllByNameAsc();
 
     Optional<Category> findByName(String name);
+
 }
