@@ -12,9 +12,7 @@
 
 <main class="container-fluid py-4">
 
-    <!--    inicio flash messags -->
-
-    <!-- Flash Messages Section - Centralizado para todas as páginas -->
+    <!-- Flash Messages Section -->
     <div class="container mt-3">
         <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
             <span th:text="${success}"></span>
@@ -38,7 +36,7 @@
         </div>
     </div>
 
-    <!--  fim flash messags   -->
+    <!--  end flash messags   -->
 
     <div layout:fragment="content">
         <!-- The page content will be inserted here -->
