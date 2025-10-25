@@ -41,9 +41,9 @@
                         </div>
                         <small class="form-text text-muted">Select one or more categories</small>
 
-<!--                        <small id="categoryError" class="form-text text-danger" style="display:none;">-->
-<!--                            Please select at least one category.-->
-<!--                        </small>-->
+                        <!--                        <small id="categoryError" class="form-text text-danger" style="display:none;">-->
+                        <!--                            Please select at least one category.-->
+                        <!--                        </small>-->
 
 
                         <div id="categoryError" style="color:red; display:none;">Please select at least one category.</div>
@@ -103,14 +103,66 @@
 <div layout:fragment="scripts">
     <script th:inline="javascript">
         $(document).ready(function () {
-
             $('#summernote').summernote({
-                height: 300
+                height: 300,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'italic', 'underline', 'clear']],
+                    ['fontname', ['fontname']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['misc', ['codeview']],
+                    ['view', ['fullscreen', 'help']]
+                ],
+                callbacks: {
+                    onInit: function() {
+                        // Aguarda um pouco para garantir que a toolbar foi renderizada
+                        setTimeout(function() {
+                            addCustomCodeButton();
+                        }, 100);
+                    }
+                }
             });
 
+            function addCustomCodeButton() {
+                // Encontra a toolbar do Summernote
+                var toolbar = $('.note-toolbar');
+
+                // Cria um novo grupo de botões para nosso botão customizado
+                var customButtonGroup = $('<div class="note-btn-group"></div>');
+
+                // Cria o botão customizado
+                var customButton = $('<button type="button" class="btn btn-default btn-sm" title="Insert Code Block" style="margin-right: 5px;">' +
+                                    '<i class="fa fa-code" style="margin-right: 3px;"></i> Code' +
+                                    '</button>');
+
+                // Adiciona o evento de clique
+                customButton.on('click', function() {
+                    var codeBlock = '<pre style="background: #f4f4f4; border: 1px solid #ddd; color: #333; font-family: monospace; font-size: 14px; line-height: 1.4; margin: 10px 0; padding: 15px; overflow-x: auto; white-space: pre-wrap;">// Insert your code here</pre>';
+
+                    // Insere o código no editor
+                    $('#summernote').summernote('pasteHTML', codeBlock);
+                });
+
+                // Adiciona o botão ao grupo
+                customButtonGroup.append(customButton);
+
+                // Adiciona o grupo à toolbar (antes do grupo de view)
+                var viewGroup = toolbar.find('.note-btn-group[data-name="view"]');
+                if (viewGroup.length) {
+                    customButtonGroup.insertBefore(viewGroup);
+                } else {
+                    // Se não encontrar o grupo de view, adiciona no final
+                    toolbar.append(customButtonGroup);
+                }
+            }
+
+            // Validação do formulário
             $("form").on("submit", function (e) {
                 let valid = true;
-
                 let selected = $(".category-checkbox:checked").length;
                 if (selected === 0) {
                     $("#categoryError").show();
@@ -118,18 +170,43 @@
                 } else {
                     $("#categoryError").hide();
                 }
-
                 if ($('#summernote').summernote('isEmpty')) {
                     alert("The 'Body' is required!");
                     valid = false;
                 }
-
                 if (!valid) {
                     e.preventDefault();
                 }
             });
         });
     </script>
+
+    <!-- Estilo para o bloco de código -->
+    <style>
+        .code-block {
+            background: #f8f8f8 !important;
+            border: 1px solid #ddd !important;
+            border-left: 4px solid #007bff !important;
+            padding: 15px !important;
+            border-radius: 4px !important;
+            overflow-x: auto !important;
+            font-family: 'Courier New', Courier, monospace !important;
+            font-size: 14px !important;
+            line-height: 1.4 !important;
+            margin: 10px 0 !important;
+            color: #333 !important;
+        }
+
+        /* Estilo para o botão customizado */
+        .note-toolbar .btn-default {
+            background-color: #fff;
+            border-color: #ddd;
+        }
+
+        .note-toolbar .btn-default:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
 </div>
 </body>
 </html>
