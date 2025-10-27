@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <header th:fragment="common-header">
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTopMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
 
+        <div>
+            <a class="font-weight-bold pl-3 text-white" th:href="@{/posts}">Espedito Melo</a>
+        </div>
+
         <div class="collapse navbar-collapse" id="navbarTopMenu">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <label class="nav-link text-white font-weight-bold">Espedito Melo</label>
-                </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" th:href="@{/posts}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" th:href="@{/about}">About and Contact</a>
+                    <a class="nav-link text-white" th:href="@{/about}">About & Contact</a>
                 </li>
             </ul>
         </div>
