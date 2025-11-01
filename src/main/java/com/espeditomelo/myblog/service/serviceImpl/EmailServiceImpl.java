@@ -21,47 +21,50 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private TemplateEngine templateEngine;
 
-    @Value("${app.email.admin:sbu042025@vinciano.com.br}")
+    @Value("${app.email.admin:g@gmail.com}")
     private String adminEmail;
 
     @Value("${app.email.notification.enabled:false}")
     private boolean emailNotificationsEnabled;
 
-    @Override
-    public void sendCommentNotification(String postTitle,
-                                        String commentAuthor,
-                                        String commentContent,
-                                        String postUrl,
-                                        boolean isReply,
-                                        String parentCommentAuthor) {
+    @Value("${spring.mail.username:dmi@vinciano.com.br}")
+    private String fromEmail;
 
-        if(!emailNotificationsEnabled) {
-            return;
-        }
-
-        try {
-            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-            mimeMessageHelper.setTo(adminEmail);
-            mimeMessageHelper.setSubject(" New " + (isReply ? "Reply" : "Comment") + " on blog");
-
-            //conexto para o template thymeleaf
-            Context context = new Context();
-            context.setVariable("postTitle", postTitle);
-            context.setVariable("commentAuthor", commentAuthor);
-            context.setVariable("commentContent", commentContent);
-            context.setVariable("postUrl", postUrl);
-            context.setVariable("isReply", isReply);
-            context.setVariable("parentCommentAuthor", parentCommentAuthor);
-
-            String htmlContent = templateEngine.process("email/comment-notification", context);
-            mimeMessageHelper.setText(htmlContent, true);
-            javaMailSender.send(mimeMessage);
-
-        } catch(MessagingException e) {
-            System.err.println("Error to send e-mail notification " + e.getMessage());
-        }
-    }
+//    @Override
+//    public void sendCommentNotification(String postTitle,
+//                                        String commentAuthor,
+//                                        String commentContent,
+//                                        String postUrl,
+//                                        boolean isReply,
+//                                        String parentCommentAuthor) {
+//
+//        if(!emailNotificationsEnabled) {
+//            return;
+//        }
+//
+//        try {
+//            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+//            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+//            mimeMessageHelper.setTo(adminEmail);
+//            mimeMessageHelper.setSubject(" New " + (isReply ? "Reply" : "Comment") + " on blog");
+//
+//            //conexto para o template thymeleaf
+//            Context context = new Context();
+//            context.setVariable("postTitle", postTitle);
+//            context.setVariable("commentAuthor", commentAuthor);
+//            context.setVariable("commentContent", commentContent);
+//            context.setVariable("postUrl", postUrl);
+//            context.setVariable("isReply", isReply);
+//            context.setVariable("parentCommentAuthor", parentCommentAuthor);
+//
+//            String htmlContent = templateEngine.process("email/comment-notification", context);
+//            mimeMessageHelper.setText(htmlContent, true);
+//            javaMailSender.send(mimeMessage);
+//
+//        } catch(MessagingException e) {
+//            System.err.println("Error to send e-mail notification " + e.getMessage());
+//        }
+//    }
 
     @Override
     public void sendSimpleCommentNotification(String postTitle, String commentAuthor,
@@ -78,8 +81,8 @@ public class EmailServiceImpl implements EmailService {
         }
 
         try {
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>> dentro do try");
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+            simpleMailMessage.setFrom(fromEmail);
             simpleMailMessage.setTo(adminEmail);
             simpleMailMessage.setSubject("New " + (isReply ? "Reply" : "Comment") + " on blog");
             String emailText = buildEmailContent(postTitle, commentAuthor, commentContent, postUrl, isReply);
@@ -87,7 +90,11 @@ public class EmailServiceImpl implements EmailService {
             javaMailSender.send(simpleMailMessage);
             System.out.println(">>>>>>>> E-mail sended successfully to " + adminEmail);
         } catch (Exception e) {
-            System.err.println(">>>>>>>>> Error to send e-mail");
+            System.err.println(">>>>>>>>> Error to send e-mail " + e.getClass().getSimpleName() );
+            System.err.println(">>>>>>>>> Message: " + e.getMessage());
+            if(e.getMessage().contains("550") || e.getMessage().contains("rejected")){
+                System.err.println(">>>>>> E-mail rejected.");
+            }
         }
 
     }
