@@ -10,4 +10,5 @@ public interface CommentService {
     List<Comment> findAll();
     List<Comment> getCommentsByPost(Long id);
     Comment getCommentById(Long parentId);
+    void sendEmailNotification(Comment comment);
 }

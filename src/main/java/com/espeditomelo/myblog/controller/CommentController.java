@@ -2,10 +2,12 @@ package com.espeditomelo.myblog.controller;
 
 import com.espeditomelo.myblog.model.Comment;
 import com.espeditomelo.myblog.model.Post;
+import com.espeditomelo.myblog.model.event.CommentCreatedEvent;
 import com.espeditomelo.myblog.service.CommentService;
 import com.espeditomelo.myblog.service.PostService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +27,8 @@ public class CommentController {
     @Autowired
     PostService postService;
 
+    @Autowired
+    ApplicationEventPublisher applicationEventPublisher;
 
     @PostMapping("/posts/{postId}/comments")
     public String saveComment(@PathVariable("postId") Long postId,
@@ -63,9 +67,10 @@ public class CommentController {
             comment.setParent(parentComment);
         }
 
-        commentService.save(comment);
+        Comment commentSaved = commentService.save(comment);
 
         redirectAttributes.addFlashAttribute("success", "Comment added successfully");
+
         return "redirect:/posts/" + postId;
     }
 
