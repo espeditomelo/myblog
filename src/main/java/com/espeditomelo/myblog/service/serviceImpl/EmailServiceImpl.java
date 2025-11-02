@@ -21,13 +21,13 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private TemplateEngine templateEngine;
 
-    @Value("${app.email.admin:g.melo@gmail.com}")
+    @Value("${app.email.admin}")
     private String adminEmail;
 
-    @Value("${app.email.notification.enabled:false}")
+    @Value("${app.email.notification.enabled}")
     private boolean emailNotificationsEnabled;
 
-    @Value("${spring.mail.username:dmi@g.com.br}")
+    @Value("${spring.mail.username}")
     private String fromEmail;
 
     @Override
@@ -35,20 +35,11 @@ public class EmailServiceImpl implements EmailService {
                                               String commentContent, String postUrl,
                                               boolean isReply) {
 
-        if(!emailNotificationsEnabled) {
-            System.out.println("E-mail notifications disabled");
-            return;
-        }
-
-        if(javaMailSender == null){
-            System.err.println("JavaMailSender not configured");
-        }
-
         try {
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
             simpleMailMessage.setFrom(fromEmail);
             simpleMailMessage.setTo(adminEmail);
-            simpleMailMessage.setSubject("New " + (isReply ? "Reply" : "Comment") + " on blog");
+            simpleMailMessage.setSubject("New " + (isReply ? "Reply" : "Comment") + " on MyBlog");
             String emailText = buildEmailContent(postTitle, commentAuthor, commentContent, postUrl, isReply);
             simpleMailMessage.setText(emailText);
             javaMailSender.send(simpleMailMessage);
@@ -60,14 +51,13 @@ public class EmailServiceImpl implements EmailService {
                 System.err.println(">>>>>> E-mail rejected.");
             }
         }
-
     }
 
     private String buildEmailContent(String postTitle, String commentAuthor, String commentContent,
                                      String postUrl, boolean isReply) {
         return "Details of " + (isReply ? "Reply" : "Comment") + ":\n\n" +
                 "Post: " + postTitle + "\n" +
-                "Autor:" + commentAuthor + "\n" +
+                "Autor: " + commentAuthor + "\n" +
                 "Content: " + commentContent + "\n" +
                 "Link: " + postUrl + "\n\n" +
                 "---\nBlog Notification System";
