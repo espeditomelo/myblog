@@ -21,50 +21,14 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private TemplateEngine templateEngine;
 
-    @Value("${app.email.admin:g@gmail.com}")
+    @Value("${app.email.admin:g.melo@gmail.com}")
     private String adminEmail;
 
     @Value("${app.email.notification.enabled:false}")
     private boolean emailNotificationsEnabled;
 
-    @Value("${spring.mail.username:dmi@vinciano.com.br}")
+    @Value("${spring.mail.username:dmi@g.com.br}")
     private String fromEmail;
-
-//    @Override
-//    public void sendCommentNotification(String postTitle,
-//                                        String commentAuthor,
-//                                        String commentContent,
-//                                        String postUrl,
-//                                        boolean isReply,
-//                                        String parentCommentAuthor) {
-//
-//        if(!emailNotificationsEnabled) {
-//            return;
-//        }
-//
-//        try {
-//            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-//            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-//            mimeMessageHelper.setTo(adminEmail);
-//            mimeMessageHelper.setSubject(" New " + (isReply ? "Reply" : "Comment") + " on blog");
-//
-//            //conexto para o template thymeleaf
-//            Context context = new Context();
-//            context.setVariable("postTitle", postTitle);
-//            context.setVariable("commentAuthor", commentAuthor);
-//            context.setVariable("commentContent", commentContent);
-//            context.setVariable("postUrl", postUrl);
-//            context.setVariable("isReply", isReply);
-//            context.setVariable("parentCommentAuthor", parentCommentAuthor);
-//
-//            String htmlContent = templateEngine.process("email/comment-notification", context);
-//            mimeMessageHelper.setText(htmlContent, true);
-//            javaMailSender.send(mimeMessage);
-//
-//        } catch(MessagingException e) {
-//            System.err.println("Error to send e-mail notification " + e.getMessage());
-//        }
-//    }
 
     @Override
     public void sendSimpleCommentNotification(String postTitle, String commentAuthor,
@@ -72,7 +36,7 @@ public class EmailServiceImpl implements EmailService {
                                               boolean isReply) {
 
         if(!emailNotificationsEnabled) {
-            System.out.println("E-mail notifications desabled");
+            System.out.println("E-mail notifications disabled");
             return;
         }
 
