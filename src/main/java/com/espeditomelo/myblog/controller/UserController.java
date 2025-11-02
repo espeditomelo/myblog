@@ -15,12 +15,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
+@RequestMapping("/admin/users")
 public class UserController {
 
     @Autowired
     UserService userService;
 
-    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    @RequestMapping("")
     public ModelAndView getUsers() {
         ModelAndView modelAndView = new ModelAndView("users");
         List<User> users = userService.findAllEnabled();
@@ -51,7 +52,7 @@ public class UserController {
         }
         userService.save(user);
         redirectAttributes.addFlashAttribute("success", "User added successfully");
-        return new ModelAndView("redirect:/users");
+        return new ModelAndView("redirect:/admin/users");
     }
 
     @RequestMapping(value = "/edituser/{id}", method = RequestMethod.GET)
@@ -72,14 +73,14 @@ public class UserController {
         }
         userService.save(user);
         redirectAttributes.addFlashAttribute("success", "User edited successfully");
-        return new ModelAndView("redirect:/users");
+        return new ModelAndView("redirect:/admin/users");
     }
 
     @RequestMapping(value = "/deleteuser/{id}", method = RequestMethod.GET)
     public ModelAndView logicalDeleteUser(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
         userService.logicalDeleteUser(id);
         redirectAttributes.addFlashAttribute("success", "User deleted successfully");
-        return new ModelAndView("redirect:/users");
+        return new ModelAndView("redirect:/admin/users");
     }
 
 }

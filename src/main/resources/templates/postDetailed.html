@@ -48,14 +48,14 @@
                         <div class="card-body">
                            <h6 class="card-title">Share it</h6>
 
-                            <a th:href=" 'https://www.linkedin.com/sharing/share-offsite/?url=https://espeditomelo.com' + @{/title/{slug}(slug=${post.slug})} + '&title=' + ${post.title} "
+                            <a th:href=" 'https://www.linkedin.com/sharing/share-offsite/?url=https://espeditomelo.com' + @{/{slug}(slug=${post.slug})} + '&title=' + ${post.title} "
                                class="btn btn-outline-primary btn-sm"
                                target="_blank" rel="noopener noreferrer"
                                title="Share on LinkedIn">
                                 <i class="bi bi-linkedin" style="font-size: 1.2rem;"></i>
                             </a>
 
-                            <a th:href=" 'https://twitter.com/intent/tweet?url=https://espeditomelo.com' + @{/title/{slug}(slug=${post.slug})} "
+                            <a th:href=" 'https://twitter.com/intent/tweet?url=https://espeditomelo.com' + @{/{slug}(slug=${post.slug})} "
                                class="btn btn-outline-dark btn-sm me-2"
                                target="_blank" rel="noopener noreferrer"
                                title="Share on X (Twitter)">
@@ -63,7 +63,7 @@
                             </a>
 
                             <a th:href=" 'https://api.whatsapp.com/send?text=https://espeditomelo.com' +
-                                @{/title/{slug}(slug=${post.slug})} "
+                                @{/{slug}(slug=${post.slug})} "
                                class="btn btn-outline-success btn-sm"
                                target="_blank" rel="noopener noreferrer"
                                title="Share on WhatsApp">
@@ -71,7 +71,7 @@
                             </a>
 
                             <a th:href=" 'https://www.facebook.com/sharer/sharer.php?u=https://espeditomelo.com' +
-                                @{/title/{slug}(slug=${post.slug})} "
+                                @{/{slug}(slug=${post.slug})} "
                                class="btn btn-outline-primary btn-sm"
                                target="_blank" rel="noopener noreferrer"
                                title="Share on Facebook">

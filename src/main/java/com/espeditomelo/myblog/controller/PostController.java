@@ -78,7 +78,7 @@ public class PostController {
         return "postDetailed";
     }
 
-    @RequestMapping(value = "/title/{slug:[a-z0-9\\-]+}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{slug:[a-z0-9\\-]+}", method = RequestMethod.GET)
     public ModelAndView getPostBySlug(@PathVariable("slug") String slug) {
         ModelAndView modelAndView = new ModelAndView("postDetailed");
         Post post = postService.findBySlugWithCategoryAndUser(slug);
@@ -138,7 +138,7 @@ public class PostController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/newpost", method = RequestMethod.GET)
+    @RequestMapping(value = "/admin/posts/newpost", method = RequestMethod.GET)
     public ModelAndView getPostForm() {
         ModelAndView modelAndView = new ModelAndView("postForm");
               List<User> users = userService.findAllEnabled();
@@ -149,7 +149,7 @@ public class PostController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/newpost", method = RequestMethod.POST)
+    @RequestMapping(value = "/admin/posts/newpost", method = RequestMethod.POST)
     public ModelAndView savePost(@Valid Post post, BindingResult  bindingResult,
                                  RedirectAttributes redirectAttributes,
                                  @RequestParam(value = "categoryIds", required = true) List<Long> categoryIds,
@@ -190,9 +190,6 @@ public class PostController {
             redirectAttributes.addFlashAttribute("error", "Error creating post: " + e.getMessage());
             return getErrorView(post, categoryIds);
         }
-
-
-
     }
 
     private ModelAndView getErrorView(@Valid Post post, List<Long> categoryIds) {

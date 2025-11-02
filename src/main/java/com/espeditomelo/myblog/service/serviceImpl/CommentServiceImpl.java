@@ -77,7 +77,7 @@ public class CommentServiceImpl implements CommentService {
             }
 
             // >>>
-            String postUrl = "http://localhost:8080/title/" + post.getSlug();
+            String postUrl = "http://localhost:8080/" + post.getSlug();
             boolean isReply = comment.getParent() != null;
 
             System.out.println(">>>>>>>>>>>>>> Sendind e-mail for: " + post.getTitle());

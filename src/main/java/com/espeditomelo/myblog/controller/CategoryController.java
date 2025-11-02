@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/admin/categories")
 public class CategoryController {
 
     @Autowired
@@ -28,7 +29,7 @@ public class CategoryController {
     @Autowired
     PostService postService;
 
-    @RequestMapping(value = "/categories", method = RequestMethod.GET)
+    @RequestMapping("")
     public ModelAndView getCategories() {
         ModelAndView modelAndView = new ModelAndView("categories");
         List<Category> categories = categoryService.findAll();
@@ -51,7 +52,7 @@ public class CategoryController {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("category", category);
             redirectAttributes.addFlashAttribute("message", "All required fields must be completed");
-            return new ModelAndView("redirect:/editcategory/" + category.getId());
+            return new ModelAndView("redirect:/admin/editcategory/" + category.getId());
         }
 
         // Verifica se o nome já existe (excluindo a categoria atual)
@@ -59,12 +60,12 @@ public class CategoryController {
         if (existingCategory.isPresent() && !existingCategory.get().getId().equals(category.getId())) {
             redirectAttributes.addFlashAttribute("category", category);
             redirectAttributes.addFlashAttribute("message", "The category name already registered");
-            return new ModelAndView("redirect:/editcategory/" + category.getId());
+            return new ModelAndView("redirect:/admin/editcategory/" + category.getId());
         }
 
         categoryService.save(category);
         redirectAttributes.addFlashAttribute("success", "Category edited successfully");
-        return new ModelAndView("redirect:/categories");
+        return new ModelAndView("redirect:/admin/categories");
     }
 
     @RequestMapping(value = "/newcategory", method = RequestMethod.GET)
@@ -90,19 +91,19 @@ public class CategoryController {
         }
         categoryService.save(category);
         redirectAttributes.addFlashAttribute("success", "Category added successfully");
-        return new ModelAndView("redirect:/categories");
+        return new ModelAndView("redirect:/admin/categories");
     }
 
-    @RequestMapping(value = "deletecategory/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/deletecategory/{id}", method = RequestMethod.GET)
     public ModelAndView deleteCategory(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
 
         List<Post> posts = postService.findAllWithCategoryAndUserByCategory(id);
         if(!posts.isEmpty()) {
             redirectAttributes.addFlashAttribute("message", "Category cannot deleted. There are associated posts");
-            return new ModelAndView("redirect:/categories");
+            return new ModelAndView("redirect:/admin/categories");
         }
         categoryService.deleteById(id);
         redirectAttributes.addFlashAttribute("success", "Category deleted successfully");
-        return new ModelAndView("redirect:/categories");
+        return new ModelAndView("redirect:/admin/categories");
     }
 }
