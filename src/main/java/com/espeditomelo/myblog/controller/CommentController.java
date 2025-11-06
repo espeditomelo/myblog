@@ -30,19 +30,18 @@ public class CommentController {
     @Autowired
     ApplicationEventPublisher applicationEventPublisher;
 
-    @PostMapping("/posts/{postId}/comments")
-    public String saveComment(@PathVariable("postId") Long postId,
+    @PostMapping("/posts/{slug}/comments")
+    public String saveComment(@PathVariable("slug") String slug,
                               @RequestParam(required = false) Long parentId,
                               @Valid @ModelAttribute("comment") Comment comment,
                               BindingResult bindingResult,
                               RedirectAttributes redirectAttributes,
                               Model model){
 
-        Post post = postService.findById(postId);
+        Post post = postService.findBySlugWithCategoryAndUser(slug);
 
         if(post == null) {
-            redirectAttributes.addFlashAttribute("error",
-                    "Post not found");
+            redirectAttributes.addFlashAttribute("error", "Post not found");
             return "redirect:/posts";
         }
 
@@ -71,7 +70,52 @@ public class CommentController {
 
         redirectAttributes.addFlashAttribute("success", "Comment added successfully");
 
-        return "redirect:/posts/" + postId;
+        return "redirect:/" + slug;
     }
+
+//    @PostMapping("/posts/{postId}/comments")
+//    public String saveComment(@PathVariable("postId") Long postId,
+//                              @RequestParam(required = false) Long parentId,
+//                              @Valid @ModelAttribute("comment") Comment comment,
+//                              BindingResult bindingResult,
+//                              RedirectAttributes redirectAttributes,
+//                              Model model){
+//
+//        Post post = postService.findById(postId);
+//
+//        if(post == null) {
+//            redirectAttributes.addFlashAttribute("error",
+//                    "Post not found");
+//            return "redirect:/posts";
+//        }
+//
+//        if (bindingResult.hasErrors()) {
+//            bindingResult.getFieldErrors().forEach(error -> {
+//                System.out.println(">>> Campo inválido: " + error.getField()
+//                        + " | Valor rejeitado: " + error.getRejectedValue()
+//                        + " | Mensagem: " + error.getDefaultMessage());
+//            });
+//
+//            model.addAttribute("post", post);
+//            model.addAttribute("comment", comment);
+//            model.addAttribute("error", "All required fields must be completed");
+//
+//            return "postDetailed";
+//        }
+//
+//        comment.setPost(post);
+//
+//        if(parentId != null) {
+//            Comment parentComment = commentService.getCommentById(parentId);
+//            comment.setParent(parentComment);
+//        }
+//
+//        Comment commentSaved = commentService.save(comment);
+//
+//        redirectAttributes.addFlashAttribute("success", "Comment added successfully");
+//
+//        return "redirect:/posts/" + postId;
+//    }
+
 
 }

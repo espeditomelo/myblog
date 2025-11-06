@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class PostController {
@@ -68,15 +69,16 @@ public class PostController {
         return modelAndView;
     }
 
-    @GetMapping(value = "/posts/{id}")
-    public String getPostDetailed(@PathVariable Long id, Model model){
-        Post post = postService.findById(id);
-        model.addAttribute("post", post);
-        List<Comment> comments = commentService.getCommentsByPost(id);
-        model.addAttribute("comments", comments);
-        model.addAttribute("comment", new Comment());
-        return "postDetailed";
-    }
+    // ? alterar ou remover
+//    @GetMapping(value = "/posts/{id}")
+//    public String getPostDetailed(@PathVariable Long id, Model model){
+//        Post post = postService.findById(id);
+//        model.addAttribute("post", post);
+//        List<Comment> comments = commentService.getCommentsByPost(id);
+//        model.addAttribute("comments", comments);
+//        model.addAttribute("comment", new Comment());
+//        return "postDetailed";
+//    }
 
     @RequestMapping(value = "/{slug:[a-z0-9\\-]+}", method = RequestMethod.GET)
     public ModelAndView getPostBySlug(@PathVariable("slug") String slug) {
@@ -116,15 +118,37 @@ public class PostController {
             return modelAndView;
     }
 
-    @RequestMapping(value = "/postsbycategory/{id}", method = RequestMethod.GET)
-    public ModelAndView getPostsByCategory(@PathVariable("id") long id,
+//    @RequestMapping(value = "/postsbycategory/{id}", method = RequestMethod.GET)
+//    public ModelAndView getPostsByCategory(@PathVariable("id") long id,
+//                                           @RequestParam(value = "page", defaultValue = "0") int page) {
+//        ModelAndView modelAndView = new ModelAndView("posts-list");
+//
+//        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+//        Page<Post> postsPage = postService.findAllWithCategoryAndUserByCategoryPageable(id, pageable);
+//
+//        Category selectedCategory = categoryService.findById(id);
+//
+//        modelAndView.addObject("posts", postsPage.getContent());
+//        modelAndView.addObject("currentPage", page);
+//        modelAndView.addObject("totalPages", postsPage.getTotalPages());
+//        modelAndView.addObject("totalItems", postsPage.getTotalElements());
+//        modelAndView.addObject("hasNext", postsPage.hasNext());
+//        modelAndView.addObject("hasPrev", postsPage.hasPrevious());
+//        modelAndView.addObject("categoryId", id);
+//        modelAndView.addObject("selectedCategory", selectedCategory);
+//
+//        return modelAndView;
+//    }
+
+    @RequestMapping(value = "/postsbycategory/{name}", method = RequestMethod.GET)
+    public ModelAndView getPostsByCategory(@PathVariable("name") String name,
                                            @RequestParam(value = "page", defaultValue = "0") int page) {
         ModelAndView modelAndView = new ModelAndView("posts-list");
 
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
-        Page<Post> postsPage = postService.findAllWithCategoryAndUserByCategoryPageable(id, pageable);
+        Page<Post> postsPage = postService.findAllWithCategoryAndUserBycategoryNamePageable(name, pageable);
 
-        Category selectedCategory = categoryService.findById(id);
+        Optional<Category> selectedCategory = categoryService.findByName(name);
 
         modelAndView.addObject("posts", postsPage.getContent());
         modelAndView.addObject("currentPage", page);
@@ -132,7 +156,7 @@ public class PostController {
         modelAndView.addObject("totalItems", postsPage.getTotalElements());
         modelAndView.addObject("hasNext", postsPage.hasNext());
         modelAndView.addObject("hasPrev", postsPage.hasPrevious());
-        modelAndView.addObject("categoryId", id);
+        modelAndView.addObject("categoryName", name);
         modelAndView.addObject("selectedCategory", selectedCategory);
 
         return modelAndView;

@@ -107,7 +107,8 @@
                             <h2 class="card-title" style="font-weight: normal; color=blue; padding-top: 5px;">
                                 Leave Your Comment
                             </h2>
-                            <form id="global-comment-form" th:action="@{'/posts/' + ${post.id} + '/comments'}" method="post" th:object="${comment}">
+<!--                            <form id="global-comment-form" th:action="@{'/posts/' + ${post.id} + '/comments'}" method="post" th:object="${comment}">-->
+                                <form id="global-comment-form" th:action="@{'/posts/' + ${post.slug} + '/comments'}" method="post" th:object="${comment}">
 
                                 <div class="form-group">
                                     <label for="contentComment">Comment</label>

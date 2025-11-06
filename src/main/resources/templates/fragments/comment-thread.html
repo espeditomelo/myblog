@@ -24,8 +24,8 @@
 <!--        form de resposta (oculto por padrao) -->
             <div class="reply-form mt-3" th:attr="id='reply-form-' + ${comment.id}"
                 style="display: none;">
-                <form th:action="@{'/posts/' + ${comment.post.id} + '/comments'}"
-                    method="post" th:object="${comment}">
+<!--                <form th:action="@{'/posts/' + ${comment.post.id} + '/comments'}" method="post" th:object="${comment}">-->
+                <form th:action="@{'/posts/' + ${comment.post.slug} + '/comments'}" method="post" th:object="${comment}">
 
                     <input type="hidden" name="parentId" th:value="${comment.id}">
 

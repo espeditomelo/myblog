@@ -13,7 +13,7 @@
                    <ol class="breadcrumb" style="backgound-color: white; padding-left:
                         0px">
                        <li class="breadcumb-item active" aria-current="page">
-                           <h2 th:text="${selectedCategory.name}"></h2>
+                            <h2 th:text="${categoryName}"></h2>
                        </li>
                    </ol>
                 </nav>
@@ -52,7 +52,7 @@
 
                     </p>
 
-                    <a th:href="${(#mvc.url('PC#getPostDetailed').arg(0, post.id)).build()}">
+                    <a th:href="@{/{slug}(slug=${post.slug})}">
                         <div th:if="${post.mainImageUrl != null}" style="margin-bottom: 15px;">
                             <img th:src="${post.mainImageUrl}"
                                  alt="Post Image"
@@ -70,7 +70,8 @@
 
                     <p class="card-subtitle mb-2 text-muted" style="font-size: 0.8rem;">
                         <span th:each="category : ${post.categories}">
-                            <a th:href="@{/postsbycategory/{id}(id=${category.id})}">
+<!--                            <a th:href="@{/postsbycategory/{id}(id=${category.id})}">-->
+                            <a th:href="@{'/postsbycategory/' + ${category.name}}">
                                 <span class="badge badge-secondary" th:text="${category.name}">
                                 </span>
                             </a>

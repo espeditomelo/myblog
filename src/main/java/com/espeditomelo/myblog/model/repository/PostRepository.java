@@ -67,4 +67,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "AND p.user.id = :id " +
             "ORDER BY p.createdAt DESC")
     Page<Post> findAllWithCategoryAndUserByUserPageable(@Param("id") Long id, Pageable pageable);
+
+    @Query("SELECT DISTINCT p FROM Post p " +
+            "LEFT JOIN FETCH p.user " +
+            "LEFT JOIN FETCH p.postCategories pc " +
+            "LEFT JOIN FETCH pc.category " +
+            "WHERE p.status = 'A' " +
+            "AND pc.category.name = :name " +
+            "ORDER BY p.createdAt DESC")
+    Page<Post> findAllWithCategoryAndUserBycategoryNamePageable(@Param("name") String name, Pageable pageable);
 }

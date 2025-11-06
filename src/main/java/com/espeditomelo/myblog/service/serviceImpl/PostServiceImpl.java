@@ -42,6 +42,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public Page<Post> findAllWithCategoryAndUserBycategoryNamePageable(String name, Pageable pageable) {
+        return postRepository.findAllWithCategoryAndUserBycategoryNamePageable(name, pageable);
+    }
+
+    @Override
     public Post findById(Long id) {
         return postRepository.findById(id).get();
     }

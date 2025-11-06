@@ -13,6 +13,7 @@ public interface PostService {
     Page<Post> findAllWithCategoryAndUserPageable(Pageable pageable);
     List<Post> findAllWithCategoryAndUserByCategory(Long id);
     Page<Post> findAllWithCategoryAndUserByCategoryPageable(Long id, Pageable pageable);
+    Page<Post> findAllWithCategoryAndUserBycategoryNamePageable(String name, Pageable pageable);
     Post findById(Long id);
     Post save(Post post);
 
