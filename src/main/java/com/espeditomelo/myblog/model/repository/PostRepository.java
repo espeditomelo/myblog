@@ -64,16 +64,25 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "LEFT JOIN FETCH p.postCategories pc " +
             "LEFT JOIN FETCH pc.category " +
             "WHERE p.status = 'A' " +
-            "AND p.user.id = :id " +
+            "AND pc.category.name = :name " +
             "ORDER BY p.createdAt DESC")
-    Page<Post> findAllWithCategoryAndUserByUserPageable(@Param("id") Long id, Pageable pageable);
+    Page<Post> findAllWithCategoryAndUserBycategoryNamePageable(@Param("name") String name, Pageable pageable);
+
+//    @Query("SELECT DISTINCT p FROM Post p " +
+//            "LEFT JOIN FETCH p.user " +
+//            "LEFT JOIN FETCH p.postCategories pc " +
+//            "LEFT JOIN FETCH pc.category " +
+//            "WHERE p.status = 'A' " +
+//            "AND p.user.id = :id " +
+//            "ORDER BY p.createdAt DESC")
+//    Page<Post> findAllWithCategoryAndUserByUserPageable(@Param("id") Long id, Pageable pageable);
 
     @Query("SELECT DISTINCT p FROM Post p " +
             "LEFT JOIN FETCH p.user " +
             "LEFT JOIN FETCH p.postCategories pc " +
             "LEFT JOIN FETCH pc.category " +
             "WHERE p.status = 'A' " +
-            "AND pc.category.name = :name " +
+            "AND p.user.username = :username " +
             "ORDER BY p.createdAt DESC")
-    Page<Post> findAllWithCategoryAndUserBycategoryNamePageable(@Param("name") String name, Pageable pageable);
+    Page<Post> findAllWithCategoryAndUserByUserPageable(@Param("username") String username, Pageable pageable);
 }

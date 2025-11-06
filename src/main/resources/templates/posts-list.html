@@ -24,7 +24,8 @@
                    <ol class="breadcrumb" style="backgound-color: white;
                         padding-left: 0px">
                        <li class="breadcumb-item active" aria-current="page">
-                           <h2 th:text="${selectedUser.username}"></h2>
+<!--                           <h2 th:text="${selectedUser.username}"></h2>-->
+                           <h2 th:text="${username}"></h2>
                        </li>
                    </ol>
                 </nav>
@@ -46,7 +47,9 @@
                         <span th:text="${#temporals.format(post.createdAt, 'dd/MM/yyyy')}">
                         </span> - by
 
-                        <a th:href="@{/postsbyuser/{id}(id=${post.user.id})}">
+<!--                        <a th:href="@{/postsbyuser/{id}(id=${post.user.id})}">-->
+<!--                        <a th:href="@{/postsbyuser/' + {post.user.username}}">-->
+                        <a th:href="@{'/postsbyuser/' + ${post.user.username}}">
                             <span th:text="${post.user.username}"></span>
                         </a>
 

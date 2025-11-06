@@ -20,5 +20,5 @@ public interface PostService {
     Post findBySlugWithCategoryAndUser(String slug);
     String generateUniqueSlug(String title);
 
-    Page<Post> findAllWithCategoryAndUserByUserPageable(Long id, Pageable pageable);
+    Page<Post> findAllWithCategoryAndUserByUserPageable(String username, Pageable pageable);
 }
