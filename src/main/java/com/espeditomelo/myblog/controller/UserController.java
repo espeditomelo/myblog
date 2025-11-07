@@ -50,6 +50,14 @@ public class UserController {
             modelAndView.addObject("message", "The e-mail already registered");
             return modelAndView;
         }
+
+        if(userService.findByUsername(user.getUsername()).isPresent()){
+            ModelAndView modelAndView = new ModelAndView("userForm");
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("message", "The username already registered");
+            return modelAndView;
+        }
+
         userService.save(user);
         redirectAttributes.addFlashAttribute("success", "User added successfully");
         return new ModelAndView("redirect:/admin/users");

@@ -68,11 +68,11 @@ public class Post {
         this.slug = generateSlug(title);
     }
 
-    public void generateSlugFromtitle(){
-        if(this.title != null) {
-            this.slug = generateSlug(this.title);
-        }
-    }
+//    public void generateSlugFromtitle(){
+//        if(this.title != null) {
+//            this.slug = generateSlug(this.title);
+//        }
+//    }
 
 
     public static String generateSlug(String title) {
@@ -80,7 +80,11 @@ public class Post {
             return "";
         }
 
-        return title
+        return getString(title);
+    }
+
+    private static String getString(String text) {
+        return text
                 .toLowerCase()
                 .trim()
                 // Remove acentos

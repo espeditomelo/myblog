@@ -28,6 +28,10 @@ public class User implements Serializable {
 
     @NotBlank
     @Column(nullable = false)
+    private String fullName;
+
+    @NotBlank
+    @Column(nullable = false)
     private String password;
 
     @NotBlank
@@ -68,6 +72,10 @@ public class User implements Serializable {
         this.username = username;
     }
 
+    public String getFullName() { return fullName; }
+
+    public void setFullName(String fullName) { this.fullName = fullName; }
+
     public String getPassword() {
         return password;
     }
@@ -107,13 +115,5 @@ public class User implements Serializable {
     public void setPosts(List<Post> posts) {
         this.posts = posts;
     }
-
-
-    // ------ UerDetails
-
-
-
-
-
 
 }

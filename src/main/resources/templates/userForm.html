@@ -27,8 +27,24 @@
 
                     <div class="form-group">
                         <label for="username">Username</label>
-                        <input type="text" class="form-control" id="username" th:field="*{username}" placeholder="Username *" required>
+                        <input type="text" class="form-control" id="username" th:field="*{username}"
+
+                               placeholder="Username * (apenas letras minúsculas, números, . e -)"
+                               pattern="^[a-z0-9.-]+$"
+                               oninput="this.value = this.value.toLowerCase().replace(/[^a-z0-9.-]/g, '')"
+
+                        required>
+
                         <div th:if="${#fields.hasErrors('username')}" class="invalid-feedback" th:errors="*{username}"></div>
+
+                        <small class="form-text text-muted">Apenas letras minúsculas, números, pontos (.) e traços (-). Não são permitidos espaços.</small>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" class="form-control" id="fullName" th:field="*{fullName}" placeholder="Full Name *" required>
+                        <div th:if="${#fields.hasErrors('fullName')}" class="invalid-feedback" th:errors="*{fullName}"></div>
                     </div>
 
                     <div class="form-group">
@@ -61,6 +77,28 @@
 
         </div>
     </section>
+
+    <script>
+        function validateUsername() {
+            const usernameInput = document.getElementById('username');
+            const usernameValue = usernameInput.value;
+            const regex = /^[a-z0-9.-]+$/;
+
+            if (!regex.test(usernameValue)) {
+                alert('Username deve conter apenas letras minúsculas, números, pontos (.) e traços (-). Não são permitidos espaços.');
+                usernameInput.focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        // Validação em tempo real enquanto o usuário digita
+        document.getElementById('username').addEventListener('input', function(e) {
+            this.value = this.value.toLowerCase().replace(/[^a-z0-9.-]/g, '');
+        });
+    </script>
+
 </div>
 </body>
 </html>

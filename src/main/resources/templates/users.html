@@ -25,6 +25,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Username</th>
+                                <th>Full Name</th>
                                 <th>Email</th>
                                 <th>Admin</th>
                                 <th>Created At</th>
@@ -35,6 +36,7 @@
                             <tr th:each="user : ${users}">
                                 <td th:text="${user.id}"></td>
                                 <td th:text="${user.username}"></td>
+                                <td th:text="${user.fullName}"></td>
                                 <td th:text="${user.email}"></td>
                                 <td>
                                     <span th:if="${user.admin}" class="badge badge-success">Yes</span>

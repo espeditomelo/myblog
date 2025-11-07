@@ -135,7 +135,7 @@ public class PostController {
         modelAndView.addObject("hasNext", postsPage.hasNext());
         modelAndView.addObject("hasPrev", postsPage.hasPrevious());
         modelAndView.addObject("username", username);
-        modelAndView.addObject("selectedUser", selectedUser);
+        modelAndView.addObject("selectedUser", selectedUser.orElse(null));
 
         return modelAndView;
     }
