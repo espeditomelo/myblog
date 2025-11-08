@@ -33,8 +33,7 @@
                     <a class="nav-link text-white" th:href="@{/posts}"><strong>All</strong></a>
                 </li>
                 <li class="nav-item" th:each="category : ${allCategories}">
-<!--                    <a class="nav-link text-white" th:href="@{/postsbycategory/{id}(id=${category.id})}"-->
-                    <a class="nav-link text-white" th:href="@{'/postsbycategory/' + ${category.name}}"
+                    <a class="nav-link text-white" th:href="@{'/postsbycategory/' + ${category.slugCategory}}"
                        th:text="${category.name}">
                     </a>
                 </li>

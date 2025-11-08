@@ -96,28 +96,6 @@ public class PostController {
         return modelAndView;
     }
 
-//    @RequestMapping(value = "/postsbyuser/{id}", method = RequestMethod.GET)
-//    public ModelAndView getPostsByUser(@PathVariable("id") long id,
-//                                       @RequestParam(value = "page", defaultValue = "0") int page){
-//            ModelAndView modelAndView = new ModelAndView("posts-list");
-//
-//            Pageable pageable = PageRequest.of(page,PAGE_SIZE);
-//            Page<Post> postsPage = postService.findAllWithCategoryAndUserByUserPageable(id, pageable);
-//
-//            User selectedUser = userService.findById(id);
-//
-//            modelAndView.addObject("posts", postsPage.getContent());
-//            modelAndView.addObject("currentPage", page);
-//            modelAndView.addObject("totalPages", postsPage.getTotalPages());
-//            modelAndView.addObject("totalItems", postsPage.getTotalElements());
-//            modelAndView.addObject("hasNext", postsPage.hasNext());
-//            modelAndView.addObject("hasPrev", postsPage.hasPrevious());
-//            modelAndView.addObject("userId", id);
-//            modelAndView.addObject("selectedUser", selectedUser);
-//
-//            return modelAndView;
-//    }
-
     @RequestMapping(value = "/postsbyuser/{username}", method = RequestMethod.GET)
     public ModelAndView getPostsByUser(@PathVariable("username") String username,
                                        @RequestParam(value = "page", defaultValue = "0") int page){
@@ -140,15 +118,15 @@ public class PostController {
         return modelAndView;
     }
 
-//    @RequestMapping(value = "/postsbycategory/{id}", method = RequestMethod.GET)
-//    public ModelAndView getPostsByCategory(@PathVariable("id") long id,
+//    @RequestMapping(value = "/postsbycategory/{name}", method = RequestMethod.GET)
+//    public ModelAndView getPostsByCategory(@PathVariable("name") String name,
 //                                           @RequestParam(value = "page", defaultValue = "0") int page) {
 //        ModelAndView modelAndView = new ModelAndView("posts-list");
 //
 //        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
-//        Page<Post> postsPage = postService.findAllWithCategoryAndUserByCategoryPageable(id, pageable);
+//        Page<Post> postsPage = postService.findAllWithCategoryAndUserBycategoryNamePageable(name, pageable);
 //
-//        Category selectedCategory = categoryService.findById(id);
+//        Optional<Category> selectedCategory = categoryService.findByName(name);
 //
 //        modelAndView.addObject("posts", postsPage.getContent());
 //        modelAndView.addObject("currentPage", page);
@@ -156,21 +134,22 @@ public class PostController {
 //        modelAndView.addObject("totalItems", postsPage.getTotalElements());
 //        modelAndView.addObject("hasNext", postsPage.hasNext());
 //        modelAndView.addObject("hasPrev", postsPage.hasPrevious());
-//        modelAndView.addObject("categoryId", id);
+//        modelAndView.addObject("categoryName", name);
 //        modelAndView.addObject("selectedCategory", selectedCategory);
 //
 //        return modelAndView;
 //    }
 
-    @RequestMapping(value = "/postsbycategory/{name}", method = RequestMethod.GET)
-    public ModelAndView getPostsByCategory(@PathVariable("name") String name,
+    @RequestMapping(value = "/postsbycategory/{slugCategory}", method = RequestMethod.GET)
+    public ModelAndView getPostsByCategory(@PathVariable("slugCategory") String slugCategory,
                                            @RequestParam(value = "page", defaultValue = "0") int page) {
         ModelAndView modelAndView = new ModelAndView("posts-list");
 
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
-        Page<Post> postsPage = postService.findAllWithCategoryAndUserBycategoryNamePageable(name, pageable);
+        Page<Post> postsPage = postService.findAllWithCategoryAndUserBySlugCategoryPageable(slugCategory, pageable);
 
-        Optional<Category> selectedCategory = categoryService.findByName(name);
+//        Optional<Category> selectedCategory = categoryService.findByName(slugCategory);
+        Optional<Category> selectedCategory = categoryService.findBySlugCategory(slugCategory);
 
         modelAndView.addObject("posts", postsPage.getContent());
         modelAndView.addObject("currentPage", page);
@@ -178,8 +157,8 @@ public class PostController {
         modelAndView.addObject("totalItems", postsPage.getTotalElements());
         modelAndView.addObject("hasNext", postsPage.hasNext());
         modelAndView.addObject("hasPrev", postsPage.hasPrevious());
-        modelAndView.addObject("categoryName", name);
-        modelAndView.addObject("selectedCategory", selectedCategory);
+        modelAndView.addObject("slugCategory", slugCategory);
+        modelAndView.addObject("selectedCategory", selectedCategory.orElse(null));
 
         return modelAndView;
     }

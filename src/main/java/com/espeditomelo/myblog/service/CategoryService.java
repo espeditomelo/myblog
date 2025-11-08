@@ -7,9 +7,16 @@ import java.util.Optional;
 
 public interface CategoryService {
     List<Category> findAll();
+
     Category findById(Long id);
+
+    Optional<Category> findBySlugCategory(String slugCategory);
+
     Category save(Category category);
+
     List<Category> findAllByNameAsc();
+
     Optional<Category> findByName(String name);
+
     void deleteById(Long id);
 }

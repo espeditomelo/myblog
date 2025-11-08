@@ -26,6 +26,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public Optional<Category> findBySlugCategory(String slugCategory) {
+        return categoryRepository.findBySlugCategory(slugCategory);
+    }
+
+    @Override
     public Category save(Category category) {
         return categoryRepository.save(category);
     }

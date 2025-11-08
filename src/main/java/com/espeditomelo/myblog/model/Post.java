@@ -68,41 +68,6 @@ public class Post {
         this.slug = generateSlug(title);
     }
 
-//    public void generateSlugFromtitle(){
-//        if(this.title != null) {
-//            this.slug = generateSlug(this.title);
-//        }
-//    }
-
-
-    public static String generateSlug(String title) {
-        if(title == null || title.trim().isEmpty()) {
-            return "";
-        }
-
-        return getString(title);
-    }
-
-    private static String getString(String text) {
-        return text
-                .toLowerCase()
-                .trim()
-                // Remove acentos
-                .replaceAll("[àáâãäå]", "a")
-                .replaceAll("[èéêë]", "e")
-                .replaceAll("[ìíîï]", "i")
-                .replaceAll("[òóôõö]", "o")
-                .replaceAll("[ùúûü]", "u")
-                .replaceAll("[ç]", "c")
-                .replaceAll("[ñ]", "n")
-                // Remove caracteres especiais e substitui espaços por hífens
-                .replaceAll("[^a-z0-9\\s-]", "")
-                .replaceAll("\\s+", "-")
-                .replaceAll("-+", "-")
-                .replaceAll("^-|-$", "");
-    }
-
-
     // Getters and Setters
     public Long getId() {
         return id;
@@ -181,7 +146,6 @@ public class Post {
                 .collect(Collectors.toList());
     }
 
-
     public List<PostCategory> getPostCategories() {
         return postCategories;
     }
@@ -214,5 +178,31 @@ public class Post {
         this.likes = likes;
     }
 
+    public static String generateSlug(String title) {
+        if(title == null || title.trim().isEmpty()) {
+            return "";
+        }
+
+        return getString(title);
+    }
+
+    private static String getString(String text) {
+        return text
+                .toLowerCase()
+                .trim()
+                // Remove acentos
+                .replaceAll("[àáâãäå]", "a")
+                .replaceAll("[èéêë]", "e")
+                .replaceAll("[ìíîï]", "i")
+                .replaceAll("[òóôõö]", "o")
+                .replaceAll("[ùúûü]", "u")
+                .replaceAll("[ç]", "c")
+                .replaceAll("[ñ]", "n")
+                // Remove caracteres especiais e substitui espaços por hífens
+                .replaceAll("[^a-z0-9\\s-]", "")
+                .replaceAll("\\s+", "-")
+                .replaceAll("-+", "-")
+                .replaceAll("^-|-$", "");
+    }
 
 }

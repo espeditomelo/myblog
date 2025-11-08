@@ -21,6 +21,9 @@ public class Category {
     @Column(nullable = false)
     private String name;
 
+    @Column(unique = true, nullable = false, length = 300)
+    private String slugCategory;
+
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     @Column(updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -30,6 +33,11 @@ public class Category {
     private List<PostCategory> postCategories= new ArrayList<>();
 
     public Category() {}
+
+//    public Category(String name) {
+//        this.name = name;
+//        this.slugCategory = generateSlugCategory(name);
+//    }
 
     public Long getId() {
         return id;
@@ -45,6 +53,17 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+        if(name != null && !name.trim().isEmpty()) {
+            this.slugCategory = generateSlugCategory(name);
+        }
+    }
+
+    public String getSlugCategory() {
+        return slugCategory;
+    }
+
+    public void setSlugCategory(String slugCategory) {
+        this.slugCategory = slugCategory;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -59,6 +78,31 @@ public class Category {
         return postCategories.stream()
                 .map(PostCategory::getPost)
                 .toList();
+    }
+
+    public static String generateSlugCategory(String name) {
+        if(name == null || name.trim().isEmpty()) {
+            return null;
+        }
+        return getString(name);
+    }
+
+    private static String getString(String text) {
+        return text
+                .toLowerCase()
+                .trim()
+                .replaceAll("[àáâãäå]", "a")
+                .replaceAll("[èéêë]", "e")
+                .replaceAll("[ìíîï]", "i")
+                .replaceAll("[òóôõö]", "o")
+                .replaceAll("[ùúûü]", "u")
+                .replaceAll("[ç]", "c")
+                .replaceAll("[ñ]", "n")
+                // Remove caracteres especiais e substitui espaços por hífens
+                .replaceAll("[^a-z0-9\\s-]", "")
+                .replaceAll("\\s+", "-")
+                .replaceAll("-+", "-")
+                .replaceAll("^-|-$", "");
     }
 
 }

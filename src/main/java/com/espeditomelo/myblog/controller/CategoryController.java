@@ -89,6 +89,11 @@ public class CategoryController {
             modelAndView.addObject("message", "The category name already registered");
             return modelAndView;
         }
+
+//        if (category.getSlugCategory() == null || category.getSlugCategory().isEmpty()) {
+//            category.setSlugCategory(Category.generateSlugCategory(category.getName()));
+//        }
+
         categoryService.save(category);
         redirectAttributes.addFlashAttribute("success", "Category added successfully");
         return new ModelAndView("redirect:/admin/categories");

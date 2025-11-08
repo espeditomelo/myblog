@@ -36,14 +36,19 @@ public class PostServiceImpl implements PostService {
         return postRepository.findAllWithCategoryAndUserByCategory(id);
     }
 
-    @Override
-    public Page<Post> findAllWithCategoryAndUserByCategoryPageable(Long id, Pageable pageable) {
-        return postRepository.findAllWithCategoryAndUserByCategoryPageable(id, pageable);
-    }
+//    @Override
+//    public Page<Post> findAllWithCategoryAndUserByCategoryPageable(Long id, Pageable pageable) {
+//        return postRepository.findAllWithCategoryAndUserByCategoryPageable(id, pageable);
+//    }
+
+//    @Override
+//    public Page<Post> findAllWithCategoryAndUserBycategoryNamePageable(String name, Pageable pageable) {
+//        return postRepository.findAllWithCategoryAndUserBycategoryNamePageable(name, pageable);
+//    }
 
     @Override
-    public Page<Post> findAllWithCategoryAndUserBycategoryNamePageable(String name, Pageable pageable) {
-        return postRepository.findAllWithCategoryAndUserBycategoryNamePageable(name, pageable);
+    public Page<Post> findAllWithCategoryAndUserBySlugCategoryPageable(String slugCategory, Pageable pageable) {
+        return postRepository.findAllWithCategoryAndUserBySlugCategoryPageable(slugCategory, pageable);
     }
 
     @Override
