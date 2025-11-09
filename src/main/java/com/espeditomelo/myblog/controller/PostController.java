@@ -25,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class PostController {
@@ -118,27 +119,6 @@ public class PostController {
         return modelAndView;
     }
 
-//    @RequestMapping(value = "/postsbycategory/{name}", method = RequestMethod.GET)
-//    public ModelAndView getPostsByCategory(@PathVariable("name") String name,
-//                                           @RequestParam(value = "page", defaultValue = "0") int page) {
-//        ModelAndView modelAndView = new ModelAndView("posts-list");
-//
-//        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
-//        Page<Post> postsPage = postService.findAllWithCategoryAndUserBycategoryNamePageable(name, pageable);
-//
-//        Optional<Category> selectedCategory = categoryService.findByName(name);
-//
-//        modelAndView.addObject("posts", postsPage.getContent());
-//        modelAndView.addObject("currentPage", page);
-//        modelAndView.addObject("totalPages", postsPage.getTotalPages());
-//        modelAndView.addObject("totalItems", postsPage.getTotalElements());
-//        modelAndView.addObject("hasNext", postsPage.hasNext());
-//        modelAndView.addObject("hasPrev", postsPage.hasPrevious());
-//        modelAndView.addObject("categoryName", name);
-//        modelAndView.addObject("selectedCategory", selectedCategory);
-//
-//        return modelAndView;
-//    }
 
     @RequestMapping(value = "/postsbycategory/{slugCategory}", method = RequestMethod.GET)
     public ModelAndView getPostsByCategory(@PathVariable("slugCategory") String slugCategory,
@@ -148,7 +128,6 @@ public class PostController {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         Page<Post> postsPage = postService.findAllWithCategoryAndUserBySlugCategoryPageable(slugCategory, pageable);
 
-//        Optional<Category> selectedCategory = categoryService.findByName(slugCategory);
         Optional<Category> selectedCategory = categoryService.findBySlugCategory(slugCategory);
 
         modelAndView.addObject("posts", postsPage.getContent());
@@ -163,10 +142,77 @@ public class PostController {
         return modelAndView;
     }
 
+    @RequestMapping(value = "/admin/posts/adminPosts", method = RequestMethod.GET)
+    public ModelAndView getAdminPosts() {
+        ModelAndView modelAndView = new ModelAndView("adminPosts");
+        List<Post> postsAdmin = postService.findAllWithCategoryAndUser();
+        modelAndView.addObject("postsAdmin", postsAdmin);
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/admin/posts/editPost/{id}", method = RequestMethod.GET)
+    public ModelAndView getPostEdit(@PathVariable("id") long id) {
+        ModelAndView modelAndView = new ModelAndView("postForm");
+        Post post = postService.findById(id);
+
+        List<Long> selectedCategoryIds = post.getCategories().stream()
+                .map(Category::getId)
+                .toList();
+
+        modelAndView.addObject("categories", categoryService.findAll());
+        modelAndView.addObject("users", userService.findAllEnabled());
+        modelAndView.addObject("post", post);
+        modelAndView.addObject("selectedCategoryIds", selectedCategoryIds);
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/admin/posts/editPost/{id}", method = RequestMethod.POST)
+    public ModelAndView saveEditedPost(@Valid Post post, BindingResult  bindingResult,
+                                 RedirectAttributes redirectAttributes,
+                                 @RequestParam(value = "categoryIds", required = true) List<Long> categoryIds,
+                                 @RequestParam(value = "mainImage", required = false) MultipartFile mainImage) {
+
+        if(bindingResult.hasErrors()) {
+            ModelAndView modelAndView = new ModelAndView("postForm");
+            modelAndView.addObject("categories", categoryService.findAll());
+            modelAndView.addObject("users", userService.findAllEnabled());
+            modelAndView.addObject("post", post);
+            modelAndView.addObject("selectedCategoryIds", categoryIds);
+            modelAndView.addObject("message", "All required fields must be completed");
+            return modelAndView;
+        }
+
+        try {
+            // image upload
+            if(mainImage != null && !mainImage.isEmpty()) {
+                String imageUrl = imageStorageService.store(mainImage);
+                post.setMainImageUrl(imageUrl);
+            }
+
+            // categories
+            if(categoryIds != null && !categoryIds.isEmpty()) {
+                for(Long categoryId : categoryIds) {
+                    Category category = categoryService.findById(categoryId);
+                    if (category != null) {
+                        post.addCategory(category);
+                    }
+                }
+            }
+
+            postService.save(post);
+            redirectAttributes.addFlashAttribute("success", "Post created successfully");
+            return new ModelAndView("redirect:/posts");
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error creating post: " + e.getMessage());
+            return getErrorView(post, categoryIds);
+        }
+    }
+
     @RequestMapping(value = "/admin/posts/newpost", method = RequestMethod.GET)
     public ModelAndView getPostForm() {
         ModelAndView modelAndView = new ModelAndView("postForm");
-              List<User> users = userService.findAllEnabled();
+        List<User> users = userService.findAllEnabled();
         modelAndView.addObject("categories", categoryService.findAll());
         modelAndView.addObject("users", userService.findAllEnabled());
         modelAndView.addObject("post", new Post());

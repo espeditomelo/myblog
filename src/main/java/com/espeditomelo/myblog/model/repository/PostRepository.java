@@ -12,11 +12,18 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
+//    @Query("SELECT DISTINCT p FROM Post p " +
+//            "LEFT JOIN FETCH p.user " +
+//            "LEFT JOIN FETCH p.postCategories pc " +
+//            "LEFT JOIN FETCH pc.category " +
+//            "WHERE p.status = 'A' " +
+//            "ORDER BY p.createdAt DESC")
+//    List<Post> findAllWithCategoryAndUser();
+
     @Query("SELECT DISTINCT p FROM Post p " +
             "LEFT JOIN FETCH p.user " +
             "LEFT JOIN FETCH p.postCategories pc " +
             "LEFT JOIN FETCH pc.category " +
-            "WHERE p.status = 'A' " +
             "ORDER BY p.createdAt DESC")
     List<Post> findAllWithCategoryAndUser();
 
