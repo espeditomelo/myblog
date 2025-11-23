@@ -19,6 +19,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("UPDATE User u SET u.enable = false WHERE u.id = :id")
     void logicalDeleteUser(@Param("id") Long id);
 
-    @Query("SELECT u FROM User u WHERE u.enable = true")
+    @Query("SELECT u FROM User u WHERE u.enable = true ORDER BY u.username")
     List<User> findAllEnabled();
 }
