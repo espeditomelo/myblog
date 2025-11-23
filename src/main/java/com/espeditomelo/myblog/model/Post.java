@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +21,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "The title is required")
     @Column(nullable = false)
     @Size(max = 255)
     private String title;
@@ -28,11 +29,11 @@ public class Post {
     @Column(unique = true, nullable = false, length = 300)
     private String slug;
 
-    @NotBlank
+    @NotBlank(message = "The body is required")
     @Column(columnDefinition = "TEXT", nullable = false)
     private String body;
 
-    @NotBlank
+    @NotBlank(message = "The status is required")
     @Column(nullable = false)
     private String status;
 
@@ -45,7 +46,7 @@ public class Post {
     @JoinColumn(name = "user_id",referencedColumnName = "id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
     private List<PostCategory> postCategories = new ArrayList<>();
 
@@ -124,20 +125,80 @@ public class Post {
 
     public void setUser(User user) { this.user = user; }
 
-    public void addCategory(Category category){
-        PostCategory postCategory = new PostCategory(this, category);
-        postCategories.add(postCategory);
-    }
+//    public void addCategory(Category category){
+//        PostCategory postCategory = new PostCategory(this, category);
+//        postCategories.add(postCategory);
+//    }
 
-    public void removeCategory(Category category){
-        PostCategory postCategory = postCategories.stream()
-                .filter(pc -> pc.getCategory().equals(category))
-                .findFirst()
-                .orElse(null);
-        if(postCategory != null){
-            postCategories.remove(postCategory);
+    public void addCategory(Category category){
+        if (this.postCategories == null) {
+            this.postCategories = new ArrayList<>();
+        }
+
+        boolean categoryExists = postCategories.stream()
+//                .anyMatch(pc -> pc.getCategory().equals(category));
+                .anyMatch(postCategory -> postCategory.getCategory() != null && postCategory.getCategory().equals(category));
+
+        if (!categoryExists) {
+            PostCategory postCategory = new PostCategory(this, category);
+            postCategories.add(postCategory);
+            System.out.println(">>>>>>>>>>>>>>>>>>>>> Added Category ID " + category.getId() + ", Name: " + category.getName());
         }
     }
+
+//    public void removeCategory(Category category){
+//        PostCategory postCategory = postCategories.stream()
+//                .filter(pc -> pc.getCategory().equals(category))
+//                .findFirst()
+//                .orElse(null);
+//        if(postCategory != null){
+//            postCategories.remove(postCategory);
+//        }
+//    }
+
+    public void removeCategory(Category category){
+        if (this.postCategories != null) {
+            // encontra categoria que relaciona esse post com a categoria
+            PostCategory postCategoryToRemove = postCategories.stream().filter(pc -> pc.getCategory()
+                    .equals(category))
+                    .findFirst()
+                    .orElse(null);
+
+            if (postCategoryToRemove != null) {
+                postCategories.remove(postCategoryToRemove);
+                postCategoryToRemove.setPost(null);
+                postCategoryToRemove.setCategory(null);
+            }
+        }
+    }
+
+//    public void clearCategories() {
+//        if (this.postCategories != null) {
+//            Iterator<PostCategory> iterator = this.postCategories.iterator();
+//            while (iterator.hasNext()) {
+//                PostCategory postCategory = iterator.next();
+//                postCategory.setPost(null);
+//                postCategory.setCategory(null);
+//            }
+//        }
+//    }
+
+    public void clearCategories() {
+
+        System.out.println(">>>>>>>>>>>>>>>>>> clearing categories for post: " + this.getId());
+        System.out.println(">>>>>>>>>>>>>>>>>> curent categories count: " + (this.postCategories != null ? this.postCategories.size() : 0));
+
+        if (this.postCategories != null) {
+            for (PostCategory postCategory : this.postCategories) {
+                System.out.println(">>>>>>>>>>>>>>>>>> removing PostCategory - ID: " + this.getId() + ", Category ID: " +
+                                (postCategory.getCategory() != null ? postCategory.getCategory().getId() : "NULL"));
+            }
+            this.postCategories.clear();
+        }
+        System.out.println(">>>>>>>>>>>>>>>>> After clearing - categories count: " + (this.postCategories != null ? this.postCategories.size() : 0));
+    }
+
+
 
     @Transient
     public List<Category> getCategories(){

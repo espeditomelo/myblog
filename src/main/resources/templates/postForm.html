@@ -23,13 +23,38 @@
 
                 <form method="post" th:object="${post}" enctype="multipart/form-data">
 
-                <!-- novo-->
                     <input type="hidden" th:field="*{id}">
 
                     <div class="form-group">
                         <label for="mainImage">Main Image</label>
-                        <input type="file" class="form-control-file" id="mainImage" name="mainImage" accept="image/*" required>
-                        <small class="form-text text-muted">Select a main image for the post (optional)</small>
+
+                    <!-- show current image -->
+                        <div th:if="${post.mainImageUrl != null and !post.mainImageUrl.isEmpty()}"
+                            style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 5px">
+                            <p><strong>Current Image</strong></p>
+                            <img th:src="${post.mainImageUrl}" alt="Current post image"
+                            style="max-width: 300px; height: auto; border-radius: 5px; disply: block;">
+                            <small class="form-text text-muted" style="margin-top: 5px;">
+                                This is the current image associated with the post
+                            </small>
+                        </div>
+
+                        <!-- upload field of new image -->
+                        <div th:if="${post.mainImageUrl == null or post.mainImageUrl.isEmpty()}" style="margin-bottom: 15px;">
+                            <p><strong>There aren't image associated with the post</strong></p>
+                        </div>
+
+
+                        <input type="file" class="form-control-file" id="mainImage" name="mainImage" accept="image/*">
+                        <small class="form-text text-muted">
+                            Select a main image for the post (optional)
+                            <span th:if="${post.mainImageUrl != null and !post.mainImageUrl.isEmpty()}">
+                                If no image is selected, the current image will be preserved
+                            </span>
+                            <span th:if="${post.id == null or post.id == 0}">
+                                Image is optional for new posts
+                            </span>
+                        </small>
 
                         <label>Categories</label>
                         <div class="checkbox-group" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; max-height: 200px; overflow-y: auto;">
@@ -77,8 +102,8 @@
 
                     <div class="form-group">
                         <label for="title">Title</label>
-                        <input type="text" class="form-control" id="title" th:field="*{title}" placeholder="Title *" required>
-
+                        <input type="text" class="form-control" id="title" th:field="*{title}" placeholder="Title *" required
+                        th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'">
                         <div th:if="${#fields.hasErrors('title')}" class="invalid-feedback" th:errors="*{title}"></div>
 
                     </div>
@@ -118,7 +143,6 @@
                 ],
                 callbacks: {
                     onInit: function() {
-                        // Aguarda um pouco para garantir que a toolbar foi renderizada
                         setTimeout(function() {
                             addCustomCodeButton();
                         }, 100);
@@ -127,29 +151,22 @@
             });
 
             function addCustomCodeButton() {
-                // Encontra a toolbar do Summernote
                 var toolbar = $('.note-toolbar');
 
-                // Cria um novo grupo de botões para nosso botão customizado
                 var customButtonGroup = $('<div class="note-btn-group"></div>');
 
-                // Cria o botão customizado
                 var customButton = $('<button type="button" class="btn btn-default btn-sm" title="Insert Code Block" style="margin-right: 5px;">' +
                                     '<i class="fa fa-code" style="margin-right: 3px;"></i> Code' +
                                     '</button>');
 
-                // Adiciona o evento de clique
                 customButton.on('click', function() {
                     var codeBlock = '<pre style="background: #f4f4f4; border: 1px solid #ddd; color: #333; font-family: monospace; font-size: 14px; line-height: 1.4; margin: 10px 0; padding: 15px; overflow-x: auto; white-space: pre-wrap;">// Insert your code here</pre>';
 
-                    // Insere o código no editor
                     $('#summernote').summernote('pasteHTML', codeBlock);
                 });
 
-                // Adiciona o botão ao grupo
                 customButtonGroup.append(customButton);
 
-                // Adiciona o grupo à toolbar (antes do grupo de view)
                 var viewGroup = toolbar.find('.note-btn-group[data-name="view"]');
                 if (viewGroup.length) {
                     customButtonGroup.insertBefore(viewGroup);
@@ -163,12 +180,16 @@
             $("form").on("submit", function (e) {
                 let valid = true;
                 let selected = $(".category-checkbox:checked").length;
-                if (selected === 0) {
+
+                var isNewPost = !$("#id").val() || $("#id").val() === "0";
+
+                if (isNewPost && selected === 0) {
                     $("#categoryError").show();
                     valid = false;
                 } else {
                     $("#categoryError").hide();
                 }
+
                 if ($('#summernote').summernote('isEmpty')) {
                     alert("The 'Body' is required!");
                     valid = false;

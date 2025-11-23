@@ -169,43 +169,56 @@ public class PostController {
     @RequestMapping(value = "/admin/posts/editPost/{id}", method = RequestMethod.POST)
     public ModelAndView saveEditedPost(@Valid Post post, BindingResult  bindingResult,
                                  RedirectAttributes redirectAttributes,
-                                 @RequestParam(value = "categoryIds", required = true) List<Long> categoryIds,
+                                 @RequestParam(value = "categoryIds", required = false) List<Long> categoryIds,
                                  @RequestParam(value = "mainImage", required = false) MultipartFile mainImage) {
 
         if(bindingResult.hasErrors()) {
-            ModelAndView modelAndView = new ModelAndView("postForm");
-            modelAndView.addObject("categories", categoryService.findAll());
-            modelAndView.addObject("users", userService.findAllEnabled());
-            modelAndView.addObject("post", post);
-            modelAndView.addObject("selectedCategoryIds", categoryIds);
-            modelAndView.addObject("message", "All required fields must be completed");
-            return modelAndView;
+            return getErrorView(post, categoryIds, "All required fields must be completed");
         }
 
         try {
+            Post existingPost = postService.findById(post.getId());
+
+            String currentImageUrl = existingPost.getMainImageUrl();
+
+            existingPost.setTitle(post.getTitle());
+            existingPost.setBody(post.getBody());
+            existingPost.setStatus(post.getStatus());
+            existingPost.setUser(post.getUser());
+
+
             // image upload
             if(mainImage != null && !mainImage.isEmpty()) {
                 String imageUrl = imageStorageService.store(mainImage);
-                post.setMainImageUrl(imageUrl);
+                existingPost.setMainImageUrl(imageUrl);
+            } else {
+                existingPost.setMainImageUrl(currentImageUrl);
             }
+
+//            existingPost.clearCategories();
+
+            existingPost.getPostCategories().clear();
+
+//            postService.save(existingPost);
 
             // categories
             if(categoryIds != null && !categoryIds.isEmpty()) {
                 for(Long categoryId : categoryIds) {
                     Category category = categoryService.findById(categoryId);
                     if (category != null) {
-                        post.addCategory(category);
+                        existingPost.addCategory(category);
                     }
                 }
             }
 
-            postService.save(post);
-            redirectAttributes.addFlashAttribute("success", "Post created successfully");
-            return new ModelAndView("redirect:/posts");
+            postService.save(existingPost);
+            redirectAttributes.addFlashAttribute("success", "Post updated successfully");
+            return new ModelAndView("redirect:/admin/posts/adminPosts");
 
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Error creating post: " + e.getMessage());
-            return getErrorView(post, categoryIds);
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Error updating post: " + e.getMessage());
+            return getErrorView(post, categoryIds, "Error updating post");
         }
     }
 
@@ -226,13 +239,26 @@ public class PostController {
                                  @RequestParam(value = "categoryIds", required = true) List<Long> categoryIds,
                                  @RequestParam(value = "mainImage", required = false) MultipartFile mainImage) {
 
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
+            System.out.println(">>>>>>>>>>>>>>>>>>>> erros de validacao foram encontrados");
+            bindingResult.getAllErrors().forEach(error -> {
+                System.out.println(">>>>>>>>>> Erro: " + error.getDefaultMessage());
+            });
+            return getErrorView(post, categoryIds, "All required fields must be completed");
+        }
+
+        if (bindingResult.hasErrors() || categoryIds == null || categoryIds.isEmpty()) {
             ModelAndView modelAndView = new ModelAndView("postForm");
             modelAndView.addObject("categories", categoryService.findAll());
             modelAndView.addObject("users", userService.findAllEnabled());
             modelAndView.addObject("post", post);
             modelAndView.addObject("selectedCategoryIds", categoryIds != null ? categoryIds : new ArrayList<>());
-            modelAndView.addObject("message", "All required fields must be completed");
+
+            if (categoryIds == null || categoryIds.isEmpty()) {
+                modelAndView.addObject("message", "Please select at least one category");
+            } else {
+                modelAndView.addObject("message", "All required fields must be completed");
+            }
             return modelAndView;
         }
 
@@ -240,18 +266,20 @@ public class PostController {
             // image upload
             if(mainImage != null && !mainImage.isEmpty()) {
                 String imageUrl = imageStorageService.store(mainImage);
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> imageUrl: " + imageUrl);
                 post.setMainImageUrl(imageUrl);
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> post.getMainImageUrl(): " + post.getMainImageUrl());
             }
 
-            // categories
-            if(categoryIds != null && !categoryIds.isEmpty()) {
+            // categoriesa
+//            if(categoryIds != null && !categoryIds.isEmpty()) {
                 for(Long categoryId : categoryIds) {
                     Category category = categoryService.findById(categoryId);
                     if (category != null) {
                         post.addCategory(category);
                     }
                 }
-            }
+//            }
 
             postService.save(post);
             redirectAttributes.addFlashAttribute("success", "Post created successfully");
@@ -259,17 +287,17 @@ public class PostController {
 
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error creating post: " + e.getMessage());
-            return getErrorView(post, categoryIds);
+            return getErrorView(post, categoryIds, "Error creating post " + e.getMessage());
         }
     }
 
-    private ModelAndView getErrorView(@Valid Post post, List<Long> categoryIds) {
+    private ModelAndView getErrorView(@Valid Post post, List<Long> categoryIds, String message) {
         ModelAndView modelAndView = new ModelAndView("postForm");
         modelAndView.addObject("categories", categoryService.findAll());
         modelAndView.addObject("users", userService.findAllEnabled());
         modelAndView.addObject("post", post);
         modelAndView.addObject("selectedCategoryIds", categoryIds != null ? categoryIds : new ArrayList<>());
-        modelAndView.addObject("message", "All required fields must be completed");
+        modelAndView.addObject("message", message);
         return modelAndView;
     }
 }

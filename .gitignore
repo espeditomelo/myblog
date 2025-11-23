@@ -33,6 +33,6 @@ build/
 .vscode/
 
 ### Images ###
-**/*.jpg
-**/*.jpeg
-**.*.png
+images/*.png
+images/*.jpg
+images/*.jpeg
