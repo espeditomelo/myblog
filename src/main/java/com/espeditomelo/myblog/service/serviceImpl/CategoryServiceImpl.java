@@ -15,10 +15,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     CategoryRepository categoryRepository;
 
-    @Override
-    public List<Category> findAll() {
-        return categoryRepository.findAll();
-    }
+//    @Override
+//    public List<Category> findAll() {
+//        return categoryRepository.findAllByNameAsc();
+//    }
 
     @Override
     public Category findById(Long id) {

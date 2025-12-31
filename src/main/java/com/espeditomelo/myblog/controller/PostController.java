@@ -15,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +24,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Controller
 public class PostController {
@@ -69,17 +67,6 @@ public class PostController {
 
         return modelAndView;
     }
-
-    // ? alterar ou remover
-//    @GetMapping(value = "/posts/{id}")
-//    public String getPostDetailed(@PathVariable Long id, Model model){
-//        Post post = postService.findById(id);
-//        model.addAttribute("post", post);
-//        List<Comment> comments = commentService.getCommentsByPost(id);
-//        model.addAttribute("comments", comments);
-//        model.addAttribute("comment", new Comment());
-//        return "postDetailed";
-//    }
 
     @RequestMapping(value = "/{slug:[a-z0-9\\-]+}", method = RequestMethod.GET)
     public ModelAndView getPostBySlug(@PathVariable("slug") String slug) {
@@ -159,7 +146,7 @@ public class PostController {
                 .map(Category::getId)
                 .toList();
 
-        modelAndView.addObject("categories", categoryService.findAll());
+        modelAndView.addObject("categories", categoryService.findAllByNameAsc());
         modelAndView.addObject("users", userService.findAllEnabled());
         modelAndView.addObject("post", post);
         modelAndView.addObject("selectedCategoryIds", selectedCategoryIds);
@@ -195,11 +182,7 @@ public class PostController {
                 existingPost.setMainImageUrl(currentImageUrl);
             }
 
-//            existingPost.clearCategories();
-
             existingPost.getPostCategories().clear();
-
-//            postService.save(existingPost);
 
             // categories
             if(categoryIds != null && !categoryIds.isEmpty()) {
@@ -226,7 +209,7 @@ public class PostController {
     public ModelAndView getPostForm() {
         ModelAndView modelAndView = new ModelAndView("postForm");
         List<User> users = userService.findAllEnabled();
-        modelAndView.addObject("categories", categoryService.findAll());
+        modelAndView.addObject("categories", categoryService.findAllByNameAsc());
         modelAndView.addObject("users", userService.findAllEnabled());
         modelAndView.addObject("post", new Post());
         modelAndView.addObject("selectedCategoryIds", new ArrayList<Long>());
@@ -239,6 +222,8 @@ public class PostController {
                                  @RequestParam(value = "categoryIds", required = true) List<Long> categoryIds,
                                  @RequestParam(value = "mainImage", required = false) MultipartFile mainImage) {
 
+        Post postExistsWithTitle = postService.findBySlugWithCategoryAndUser(post.getSlug());
+
         if (bindingResult.hasErrors()) {
             System.out.println(">>>>>>>>>>>>>>>>>>>> erros de validacao foram encontrados");
             bindingResult.getAllErrors().forEach(error -> {
@@ -247,18 +232,25 @@ public class PostController {
             return getErrorView(post, categoryIds, "All required fields must be completed");
         }
 
-        if (bindingResult.hasErrors() || categoryIds == null || categoryIds.isEmpty()) {
+        if (bindingResult.hasErrors() || categoryIds == null || categoryIds.isEmpty() || postExistsWithTitle != null) {
             ModelAndView modelAndView = new ModelAndView("postForm");
-            modelAndView.addObject("categories", categoryService.findAll());
+            modelAndView.addObject("categories", categoryService.findAllByNameAsc());
             modelAndView.addObject("users", userService.findAllEnabled());
             modelAndView.addObject("post", post);
             modelAndView.addObject("selectedCategoryIds", categoryIds != null ? categoryIds : new ArrayList<>());
 
-            if (categoryIds == null || categoryIds.isEmpty()) {
-                modelAndView.addObject("message", "Please select at least one category");
+            String message = "";
+
+            if (postExistsWithTitle != null) {
+                message = "The title already exists!!!";
+            } else if (categoryIds == null || categoryIds.isEmpty()) {
+                message = "Please select at least one category";
             } else {
-                modelAndView.addObject("message", "All required fields must be completed");
+                message = "All required fields must be completed";
             }
+
+            modelAndView.addObject("message", message);
+
             return modelAndView;
         }
 
@@ -271,15 +263,13 @@ public class PostController {
                 System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> post.getMainImageUrl(): " + post.getMainImageUrl());
             }
 
-            // categoriesa
-//            if(categoryIds != null && !categoryIds.isEmpty()) {
+            // categories
                 for(Long categoryId : categoryIds) {
                     Category category = categoryService.findById(categoryId);
                     if (category != null) {
                         post.addCategory(category);
                     }
                 }
-//            }
 
             postService.save(post);
             redirectAttributes.addFlashAttribute("success", "Post created successfully");
@@ -293,7 +283,7 @@ public class PostController {
 
     private ModelAndView getErrorView(@Valid Post post, List<Long> categoryIds, String message) {
         ModelAndView modelAndView = new ModelAndView("postForm");
-        modelAndView.addObject("categories", categoryService.findAll());
+        modelAndView.addObject("categories", categoryService.findAllByNameAsc());
         modelAndView.addObject("users", userService.findAllEnabled());
         modelAndView.addObject("post", post);
         modelAndView.addObject("selectedCategoryIds", categoryIds != null ? categoryIds : new ArrayList<>());

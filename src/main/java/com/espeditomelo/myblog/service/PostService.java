@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostService {
-
     List<Post> findAll();
     List<Post> findAllWithCategoryAndUser();
     Page<Post> findAllWithCategoryAndUserPageable(Pageable pageable);
@@ -19,9 +18,7 @@ public interface PostService {
     Page<Post> findAllWithCategoryAndUserBySlugCategoryPageable(String slugCategory, Pageable pageable);
     Post findById(Long id);
     Post save(Post post);
-
     Post findBySlugWithCategoryAndUser(String slug);
     String generateUniqueSlug(String title);
-
     Page<Post> findAllWithCategoryAndUserByUserPageable(String username, Pageable pageable);
 }
