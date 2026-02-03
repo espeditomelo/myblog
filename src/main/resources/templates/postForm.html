@@ -19,9 +19,6 @@
 
             <div>
 
-<!--                tratamento duplicacao da mensagem do title existente-->
-<!--                <th:block th:insert="~{validationMessage}"></th:block>-->
-
                 <form method="post" th:object="${post}" enctype="multipart/form-data">
 
                     <input type="hidden" th:field="*{id}">
@@ -41,7 +38,7 @@
                         </div>
 
                         <!-- upload field of new image -->
-                        <div th:if="${post.mainImageUrl == null or post.mainImageUrl.isEmpty()}" style="margin-bottom: 15px;">
+                        <div id="noImageMessage" th:if="${post.mainImageUrl == null or post.mainImageUrl.isEmpty()}" style="margin-bottom: 15px;">
                             <p><strong>There aren't image associated with the post</strong></p>
                         </div>
 
@@ -105,9 +102,6 @@
                         <label for="title">Title</label>
                         <input type="text" class="form-control" id="title" th:field="*{title}" placeholder="Title *" required
                         th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'">
-
-<!--                   xxx     <div th:if="${#fields.hasErrors('title')}" class="invalid-feedback" th:errors="*{title}"></div>-->
-
                     </div>
 
                     <label for="summernote">Body</label>
@@ -120,7 +114,6 @@
                 </form>
             </div>
 
-
         </div>
     </section>
 </div>
@@ -129,6 +122,21 @@
 <div layout:fragment="scripts">
     <script th:inline="javascript">
         $(document).ready(function () {
+
+            <!-- hide message when select a file image -->
+            const mainImageInput = document.getElementById('mainImage');
+            const noImageMessage = document.getElementById('noImageMessage');
+
+            if (mainImageInput && noImageMessage) {
+                mainImageInput.addEventListener('change', function() {
+                    if (this.files && this.files[0]) {
+                        noImageMessage.style.display = 'none';
+                    } else {
+                        noImageMessage.style.display = 'block';
+                    }
+                });
+            }
+
             $('#summernote').summernote({
                 height: 300,
                 toolbar: [
