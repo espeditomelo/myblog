@@ -45,12 +45,7 @@ public class PostController {
 
     private static final int PAGE_SIZE = 5;
 
-    @GetMapping(value = "/")
-    public String redirectToPosts(){
-        return "redirect:/posts";
-    }
-
-    @RequestMapping(value = "/posts", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView getPosts(@RequestParam(value = "page", defaultValue = "0") int page) {
         ModelAndView modelAndView = new ModelAndView("posts-list");
 
@@ -73,7 +68,7 @@ public class PostController {
         ModelAndView modelAndView = new ModelAndView("postDetailed");
         Post post = postService.findBySlugWithCategoryAndUser(slug);
         if(post == null) {
-            return new ModelAndView("redirect:/posts");
+            return new ModelAndView("redirect:/");
         }
         modelAndView.addObject("post", post);
 
@@ -172,7 +167,6 @@ public class PostController {
             existingPost.setBody(post.getBody());
             existingPost.setStatus(post.getStatus());
             existingPost.setUser(post.getUser());
-
 
             // image upload
             if(mainImage != null && !mainImage.isEmpty()) {
@@ -273,7 +267,7 @@ public class PostController {
 
             postService.save(post);
             redirectAttributes.addFlashAttribute("success", "Post created successfully");
-            return new ModelAndView("redirect:/posts");
+            return new ModelAndView("redirect:/admin/posts/adminPosts");
 
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error creating post: " + e.getMessage());

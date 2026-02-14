@@ -1,44 +1,59 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<header th:fragment="common-header">
+
+<header th:fragment="common-header" style="display: flex; flex-direction: column;">
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTopMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
 
-        <div>
-            <a class="font-weight-bold pl-3 text-white" th:href="@{/posts}">Espedito Melo</a>
+        <div class="container-fluid">
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTopMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <a class="navbar-brand font-weight-bold text-white" th:href="@{/posts}">Espedito Melo</a>
+
+            <div class="collapse navbar-collapse" id="navbarTopMenu">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" th:href="@{/posts}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" th:href="@{/about}">About & Contact</a>
+                    </li>
+                </ul>
+            </div>
         </div>
 
-        <div class="collapse navbar-collapse" id="navbarTopMenu">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link text-white" th:href="@{/posts}">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" th:href="@{/about}">About & Contact</a>
-                </li>
-            </ul>
-        </div>
     </nav>
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-info">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCategories">
-            <span class="navbar-toggler-icon"></span>
-        </button>
 
-        <div class="collapse navbar-collapse" id="navbarCategories">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link text-white" th:href="@{/posts}"><strong>All</strong></a>
-                </li>
-                <li class="nav-item" th:each="category : ${allCategories}">
-                    <a class="nav-link text-white" th:href="@{'/postsbycategory/' + ${category.slugCategory}}"
-                       th:text="${category.name}">
-                    </a>
-                </li>
-            </ul>
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCategories">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <a class="nav-brand text-white" th:href="@{/posts}"><strong>All</strong></a>
+
+            <div class="collapse navbar-collapse" id="navbarCategories">
+                <ul class="navbar-nav">
+                    <li class="nav-item" th:each="category : ${allCategories}">
+                        <a class="nav-link text-white" th:href="@{'/postsbycategory/' + ${category.slugCategory}}"
+                           th:text="${category.name}">
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
+
     </nav>
+
+    <style>
+        .navbar.bg-info .navbar-nav {
+            padding-left: 1rem;
+        }
+    </style>
+
 </header>
 </html>

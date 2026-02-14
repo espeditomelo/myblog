@@ -26,7 +26,7 @@
                     <div class="form-group">
                         <label for="mainImage">Main Image</label>
 
-                    <!-- show current image -->
+                        <!-- show current image -->
                         <div th:if="${post.mainImageUrl != null and !post.mainImageUrl.isEmpty()}"
                             style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 5px">
                             <p><strong>Current Image</strong></p>
@@ -43,9 +43,20 @@
                         </div>
 
 
+                        <!-- mostrar imagem do arquivo de imagem selecionado-->
+                        <div id="previewContainer" style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 5px">
+                            <p><strong>Selected Image</strong></p>
+                            <img id="imagePreview" alt="Preview of selected image"
+                                 style="max-width: 300px; height: auto; border-radius: 5px; disply: block;">
+                            <small class="form-text text-muted" style="margin-top: 5px;">
+                                This is look the new image will look
+                            </small>
+                        </div>
+
+
                         <input type="file" class="form-control-file" id="mainImage" name="mainImage" accept="image/*">
                         <small class="form-text text-muted">
-                            Select a main image for the post (optional)
+                            Select a main image for the post (optional).
                             <span th:if="${post.mainImageUrl != null and !post.mainImageUrl.isEmpty()}">
                                 If no image is selected, the current image will be preserved
                             </span>
@@ -118,23 +129,44 @@
     </section>
 </div>
 
-<!-- Script for Summernote -->
+<!-- Scripts -->
 <div layout:fragment="scripts">
     <script th:inline="javascript">
         $(document).ready(function () {
 
-            <!-- hide message when select a file image -->
             const mainImageInput = document.getElementById('mainImage');
             const noImageMessage = document.getElementById('noImageMessage');
+            const previewContainer = document.getElementById('previewContainer');
+            const imagePreview = document.getElementById('imagePreview');
 
-            if (mainImageInput && noImageMessage) {
+            hidePreviewImageContainer();
+
+            if (mainImageInput) {
                 mainImageInput.addEventListener('change', function() {
-                    if (this.files && this.files[0]) {
-                        noImageMessage.style.display = 'none';
+                    const file = this.files[0];
+
+                    if (file) {
+                        // hide message "no image" se exists
+                        if (noImageMessage) noImageMessage.style.display = 'none';
+
+                        // show preview area
+                        previewContainer.style.display = 'block';
+
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            imagePreview.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
                     } else {
-                        noImageMessage.style.display = 'block';
+                        // if user click on "cancel" on file selector
+                        previewContainer.style.display = 'none';
+                        if (noImageMessage) noImageMessage.style.display = 'block';
                     }
                 });
+            }
+
+            function hidePreviewImageContainer() {
+                previewContainer.style.display = 'none';
             }
 
             $('#summernote').summernote({
@@ -227,7 +259,7 @@
             color: #333 !important;
         }
 
-        /* Estilo para o botão customizado */
+        /* style for customized button */
         .note-toolbar .btn-default {
             background-color: #fff;
             border-color: #ddd;
