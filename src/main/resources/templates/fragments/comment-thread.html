@@ -2,7 +2,7 @@
 <div th:fragment="commentThread(commentList)">
     <div th:each="comment : ${commentList}" class="comment-block mb-3">
 
-        <!-- Comentário -->
+        <!-- comment -->
         <div class="border rounded p-3 bg-light bg-white">
             <p class="mb-1">
                 <strong th:text="${comment.username}">Username</strong> -
@@ -15,17 +15,17 @@
             <br>
 
 
-<!--        botao resposta-->
+            <!-- reply button -->
             <button type="button" class="btn btn-link p-0 mt-2 reply-btn"
                 th:attr="data-comment-id=${comment.id}">
                 reply
             </button>
 
-<!--        form de resposta (oculto por padrao) -->
+            <!-- form hide by default -->
             <div class="reply-form mt-3" th:attr="id='reply-form-' + ${comment.id}"
                 style="display: none;">
-<!--                <form th:action="@{'/posts/' + ${comment.post.id} + '/comments'}" method="post" th:object="${comment}">-->
-                <form th:action="@{'/posts/' + ${comment.post.slug} + '/comments'}" method="post" th:object="${comment}">
+
+                <form th:action="@{'/' + ${comment.post.slug} + '/comments'}" method="post" th:object="${comment}">
 
                     <input type="hidden" name="parentId" th:value="${comment.id}">
 
@@ -51,18 +51,16 @@
 
                     <small class="form-text text-muted">(*) Required</small>
 
-                    <button type="submit" class="btn btn-sm btn-primary mt-2">Post Reply</button>
+                    <button type="submit" class="btn btn-sm btn-primary mt-2">Post Your Reply</button>
                     <button type="button" class="btn btn-sm btn-secondary mt-2
                         cancel-reply" th:attr="data-comment-id=${comment.id}">
                         Cancel
                     </button>
                 </form>
-
             </div>
-
         </div>
 
-        <!-- Respostas (recuadas mais à direita) -->
+        <!-- answers at left -->
         <div th:if="${!#lists.isEmpty(comment.replies)}"
              style="margin-left: 40px; padding-left: 15px; border-left: 2px solid rgba(0,0,0,0.1); margin-top: 15px;">
             <div th:replace="~{fragments/comment-thread :: commentThread(${comment.replies})}"></div>

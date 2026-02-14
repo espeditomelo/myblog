@@ -30,7 +30,8 @@ public class CommentController {
     @Autowired
     ApplicationEventPublisher applicationEventPublisher;
 
-    @PostMapping("/posts/{slug}/comments")
+//    @PostMapping("/posts/{slug}/comments")
+    @PostMapping("/{slug}/comments")
     public String saveComment(@PathVariable("slug") String slug,
                               @RequestParam(required = false) Long parentId,
                               @Valid @ModelAttribute("comment") Comment comment,
@@ -42,7 +43,8 @@ public class CommentController {
 
         if(post == null) {
             redirectAttributes.addFlashAttribute("error", "Post not found");
-            return "redirect:/posts";
+//            return "redirect:/posts";
+            return "redirect:/";
         }
 
         if (bindingResult.hasErrors()) {
