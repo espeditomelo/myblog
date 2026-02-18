@@ -83,7 +83,9 @@
                         <!-- First page -->
                         <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
                             <a class="page-link"
-                               th:href="${slugCategory != null} ? @{/postsbycategory/{slugCategory}(slugCategory=${slugCategory}, page=0)} : @{/(page=0)}"
+                               th:href="${slugCategory != null and !slugCategory.isEmpty()} ? @{/postsbycategory/{slugCategory}(slugCategory=${slugCategory}, page=0)} :
+                               (${username != null and !username.isEmpty()} ? @{/postsbyuser/{username}(username=${username}, page=0)} :
+                               @{/(page=0)})"
                                th:if="${currentPage > 0}">
                                 <span aria-hidden="true">&laquo;&laquo;</span>
                             </a>
@@ -95,7 +97,9 @@
                         <!-- Previous page -->
                         <li class="page-item" th:classappend="${!hasPrev} ? 'disabled'">
                             <a class="page-link"
-                               th:href="${slugCategory != null} ? @{/postsbycategory/{slugCategory}(slugCategory=${slugCategory}, page=${currentPage - 1})} : @{/(page=${currentPage - 1})}"
+                               th:href="${slugCategory != null and !slugCategory.isEmpty()} ? @{/postsbycategory/{slugCategory}(slugCategory=${slugCategory}, page=${currentPage - 1})} :
+                                (${username != null and !username.isEmpty()} ? @{/postsbyuser/{username}(username=${username}, page=${currentPage - 1})} :
+                                @{/(page=${currentPage - 1})})"
                                th:if="${hasPrev}">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
@@ -116,9 +120,11 @@
                                 th:each="i : ${#numbers.sequence(startPage, endPage)}"
                                 th:classappend="${i == currentPage} ? 'active'">
                                 <a class="page-link"
-                                   th:href="${slugCategory != null} ? @{/postsbycategory/{slugCategory}(slugCategory=${slugCategory}, page=${i})} : @{/(page=${i})}"
-                                   th:text="${i + 1}"
-                                   th:if="${i != currentPage}">
+                                   th:if="${i != currentPage}"
+                                    th:href="${slugCategory != null and !slugCategory.isEmpty()} ? @{/postsbycategory/{slugCategory}(slugCategory=${slugCategory}, page=${i})} :
+                                    (${username != null and !username.isEmpty()} ? @{/postsbyuser/{username}(username=${username}, page=${i})} :
+                                    @{/(page=${i})})"
+                                    th:text="${i + 1}">
                                 </a>
                                 <span class="page-link" th:if="${i == currentPage}"
                                       th:text="${i + 1}"></span>
@@ -132,7 +138,9 @@
                         <!-- Next page -->
                         <li class="page-item" th:classappend="${!hasNext} ? 'disabled'">
                             <a class="page-link"
-                               th:href="${slugCategory != null} ? @{/postsbycategory/{slugCategory}(slugCategory=${slugCategory}, page=${currentPage + 1})} : @{/(page=${currentPage + 1})}"
+                               th:href="${slugCategory != null and !slugCategory.isEmpty()} ? @{/postsbycategory/{slugCategory}(slugCategory=${slugCategory}, page=${currentPage + 1})} :
+                               (${username != null and !username.isEmpty()} ? @{/postsbyuser/{username}(username=${username}, page=${currentPage + 1})} :
+                               @{/(page=${currentPage + 1})})"
                                th:if="${hasNext}">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
@@ -145,7 +153,9 @@
                         <li class="page-item" th:classappend="${currentPage ==
                             totalPages - 1} ? 'disabled'">
                             <a class="page-link"
-                               th:href="${slugCategory != null} ? @{/postsbycategory/{slugCategory}(slugCategory=${slugCategory}, page=${totalPages - 1})} : @{/(page=${totalPages - 1})}"
+                               th:href="${slugCategory != null and !slugCategory.isEmpty()} ? @{/postsbycategory/{slugCategory}(slugCategory=${slugCategory}, page=${totalPages - 1})} :
+                               (${username != null and !username.isEmpty()} ? @{/postsbyuser/{username}(username=${username}, page=${totalPages - 1})} :
+                               @{/(page=${totalPages - 1})})"
                                th:if="${currentPage < totalPages - 1}">
                                 <span aria-hidden="true">&raquo;&raquo;</span>
                             </a>
